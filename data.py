@@ -8,7 +8,7 @@ def get_db_connection():
             "user": "root",
             "password": Config.MYSQL_PASSWORD,
             "host": "localhost",
-            "database": "sites"
+            "database": "website"
         }
         cnxpool = mysql.connector.pooling.MySQLConnectionPool(
             pool_name="mypool",
