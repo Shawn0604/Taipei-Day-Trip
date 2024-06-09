@@ -39,7 +39,7 @@ def connectMySQLserver():
         else:
             print("資料庫連線未成功")
             return None, None
-    except Error as e:
+    except mysql.connector.Error as e:
         print("資料庫連線失敗:", e)
         return None, None
 
