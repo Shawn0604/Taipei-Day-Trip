@@ -107,8 +107,11 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
 
 
+
 # Get attraction by id
 # Get attraction by id
+import re
+
 @app.get("/api/attraction/{attractionId}")
 def get_attraction(attractionId: int):
     con, cursor = connectMySQLserver()
@@ -122,6 +125,7 @@ def get_attraction(attractionId: int):
 
             print("Fetched attraction data:", attraction)
 
+            # 使用正則表達式提取圖片 URL
             images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
             print("Parsed images:", images)
 
@@ -146,7 +150,6 @@ def get_attraction(attractionId: int):
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
-
 
 
 # Get MRTs
