@@ -51,7 +51,6 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
     
     con, cursor = connectMySQLserver()
     if cursor is not None:
-        
         try:
             offset = page * 12
             base_query = "SELECT * FROM attractions"
@@ -65,8 +64,10 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
             full_query = base_query + limit_offset
 
+            print("執行查詢：", full_query, "參數：", params)
             cursor.execute(full_query, params)
             attractions = cursor.fetchall()
+            print("查詢結果：", attractions)
 
             if not attractions:
                 return {"nextPage": None, "data": []}
@@ -75,7 +76,9 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
             result = []
             for attraction in attractions:
+                print("處理景點：", attraction)
                 images = attraction['images'].split(',') if attraction['images'] else []
+                print("景點圖片：", images)
 
                 result.append({
                     "id": attraction['id'],
@@ -92,11 +95,13 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
             return {"nextPage": next_page, "data": result}
         except mysql.connector.Error as err:
+            print("資料庫查詢錯誤：", err)
             return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
         finally:
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
 
 # Get attraction by id
 @app.get("/api/attraction/{attractionId}")
@@ -110,7 +115,10 @@ def get_attraction(attractionId: int):
             if not attraction:
                 raise HTTPException(status_code=400, detail="景點編號不正確")
 
+            print("Fetched attraction data:", attraction)
+
             images = attraction['images'].split(',') if attraction['images'] else []
+            print("Parsed images:", images)
 
             result = {
                 "id": attraction['id'],
@@ -127,11 +135,13 @@ def get_attraction(attractionId: int):
 
             return {"data": result}
         except mysql.connector.Error as err:
+            print("Database error:", err)
             return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
         finally:
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
 
 # Get MRTs
 @app.get("/api/mrts")
@@ -141,14 +151,17 @@ def get_mrts():
         try:
             cursor.execute("SELECT mrt, COUNT(*) FROM attractions GROUP BY mrt ORDER BY COUNT(*) DESC")
             rows = cursor.fetchall()
+            print("Fetched MRT data:", rows)
             mrts = [row['mrt'] for row in rows if row['mrt'] is not None]
             return {"data": mrts}
         except mysql.connector.Error as err:
+            print("Database error:", err)
             return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
         finally:
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
 
 def close_connection_pool():
     pass
