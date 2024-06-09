@@ -44,6 +44,9 @@ def connectMySQLserver():
         return None, None
 
 # Get attractions
+import re
+
+# Get attractions
 @app.get("/api/attractions")
 def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
     if page < 0:
@@ -77,7 +80,7 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
             result = []
             for attraction in attractions:
                 print("處理景點：", attraction)
-                images = attraction['images'].split(',') if attraction['images'] else []
+                images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
                 print("景點圖片：", images)
 
                 result.append({
@@ -90,7 +93,7 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
                     "mrt": attraction['mrt'],
                     "lat": attraction['lat'],
                     "lng": attraction['lng'],
-                    "images": [url for url in images if url.lower().endswith(('jpg', 'png'))]
+                    "images": images
                 })
 
             return {"nextPage": next_page, "data": result}
@@ -103,6 +106,8 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
 
 
+
+# Get attraction by id
 # Get attraction by id
 @app.get("/api/attraction/{attractionId}")
 def get_attraction(attractionId: int):
@@ -117,7 +122,7 @@ def get_attraction(attractionId: int):
 
             print("Fetched attraction data:", attraction)
 
-            images = attraction['images'].split(',') if attraction['images'] else []
+            images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
             print("Parsed images:", images)
 
             result = {
@@ -130,7 +135,7 @@ def get_attraction(attractionId: int):
                 "mrt": attraction['mrt'],
                 "lat": attraction['lat'],
                 "lng": attraction['lng'],
-                "images": [url for url in images if url.lower().endswith(('jpg', 'png'))]
+                "images": images
             }
 
             return {"data": result}
@@ -141,6 +146,7 @@ def get_attraction(attractionId: int):
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
 
 
 # Get MRTs
