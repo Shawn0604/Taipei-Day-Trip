@@ -2,10 +2,12 @@ from typing import Optional
 from fastapi import FastAPI, Request, Query, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 import mysql.connector
+from fastapi.staticfiles import StaticFiles
 from mysql.connector import Error
 from config import Config
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -67,10 +69,10 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
             full_query = base_query + limit_offset
 
-            print("執行查詢：", full_query, "參數：", params)
+            # print("執行查詢：", full_query, "參數：", params)
             cursor.execute(full_query, params)
             attractions = cursor.fetchall()
-            print("查詢結果：", attractions)
+            # print("查詢結果：", attractions)
 
             if not attractions:
                 return {"nextPage": None, "data": []}
@@ -79,9 +81,10 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
             result = []
             for attraction in attractions:
-                print("處理景點：", attraction)
-                images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
-                print("景點圖片：", images)
+                # print("處理景點：", attraction)
+                # 使用正則表達式提取圖片 URL
+                images = re.findall(r'(https?://\S+\.(?:jpg|png|JPG|PNG))', attraction['images'])
+                # print("景點圖片：", images)
 
                 result.append({
                     "id": attraction['id'],
@@ -108,6 +111,8 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
 
 
 
+
+
 # Get attraction by id
 # Get attraction by id
 import re
@@ -123,11 +128,11 @@ def get_attraction(attractionId: int):
             if not attraction:
                 raise HTTPException(status_code=400, detail="景點編號不正確")
 
-            print("Fetched attraction data:", attraction)
+            # print("Fetched attraction data:", attraction)
 
             # 使用正則表達式提取圖片 URL
             images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
-            print("Parsed images:", images)
+            # print("Parsed images:", images)
 
             result = {
                 "id": attraction['id'],
@@ -160,7 +165,7 @@ def get_mrts():
         try:
             cursor.execute("SELECT mrt, COUNT(*) FROM attractions GROUP BY mrt ORDER BY COUNT(*) DESC")
             rows = cursor.fetchall()
-            print("Fetched MRT data:", rows)
+            # print("Fetched MRT data:", rows)
             mrts = [row['mrt'] for row in rows if row['mrt'] is not None]
             return {"data": mrts}
         except mysql.connector.Error as err:
@@ -178,4 +183,3 @@ def close_connection_pool():
 @app.on_event("shutdown")
 def shutdown_event():
     close_connection_pool()
-
