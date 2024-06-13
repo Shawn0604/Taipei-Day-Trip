@@ -1,3 +1,3 @@
 class Config:
-    MYSQL_PASSWORD = "Shawn18+29"
+    MYSQL_PASSWORD = "12345"
     SESSION_SECRET_KEY = "11223459"
