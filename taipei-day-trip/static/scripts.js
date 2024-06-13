@@ -72,12 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
         imageElement.src = attraction.images.length > 0 ? attraction.images[0] : '';
         imageElement.alt = 'Attraction Image';
 
-        const infoElement = document.createElement('div');
-        infoElement.classList.add('info');
+        const mrtTextElement = document.createElement('div');
+        mrtTextElement.classList.add('mrtText');
         const nameElement = document.createElement('div');
         nameElement.classList.add('name');
         nameElement.textContent = attraction.name;
-        infoElement.appendChild(nameElement);
+        mrtTextElement.appendChild(nameElement);
 
         const mrtTitleElement = document.createElement('div');
         mrtTitleElement.classList.add('mrtTitle');
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryElement.textContent = attraction.category;
         mrtTitleElement.append(mrtElement, categoryElement);
 
-        attractionElement.append(imageElement, infoElement, mrtTitleElement);
+        attractionElement.append(imageElement, mrtTextElement, mrtTitleElement);
 
         return attractionElement;
     };
