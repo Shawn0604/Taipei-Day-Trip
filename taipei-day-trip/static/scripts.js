@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('.search input');
     const loader = document.querySelector('.loader');
     const allattractionContainer = document.querySelector('.allattraction');
+    let currentKeyword = '';
 
     const fetchMRTs = async () => {
         try {
@@ -38,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.setAttribute('data-isLoading', 'true');
 
         try {
-            const response = await fetch(`./api/attractions?page=${page}&keyword=${keyword}`);
+            const actualKeyword = keyword || currentKeyword;
+            const url = `./api/attractions?page=${page}&keyword=${encodeURIComponent(actualKeyword)}`;
+            const response = await fetch(url);
             const data = await response.json();
             const attractions = data.data;
             const nextPage = data.nextPage;
@@ -95,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const searchAttractions = (page, isSearch = false, keyword = '') => {
+        currentKeyword = keyword; 
         fetchAttractions(page, isSearch, keyword);
     };
 
@@ -103,39 +107,45 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const ClickActions = () => {
-    document.addEventListener('click', (event) => {
-        const target = event.target;
-        if (target.classList.contains('search-icon')) {
-            searchAttractions(0, true, searchInput.value);
-        }
-        if (target.classList.contains('arrow-left')) {
-            scrollContainer(mrtContainer, -1000);
-        }
-        if (target.classList.contains('arrow-right')) {
-            scrollContainer(mrtContainer, 1000);
-        }
-    });
-
-    searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            searchAttractions(0, true, searchInput.value);
-        }
-    });
-
-    const attractionIntersectionObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && loader && loader.getAttribute('data-nextPage')) {
-                fetchAttractions(parseInt(loader.getAttribute('data-nextPage')));
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.classList.contains('search-icon')) {
+                searchAttractions(0, true, searchInput.value);
+            }
+            if (target.classList.contains('arrow-left')) {
+                scrollContainer(mrtContainer, -1000);
+            }
+            if (target.classList.contains('arrow-right')) {
+                scrollContainer(mrtContainer, 1000);
             }
         });
-    }, {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-    });
-    if (loader) attractionIntersectionObserver.observe(loader);
-    fetchMRTs();
-    fetchAttractions(0);
-};
-ClickActions();
+
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                searchAttractions(0, true, searchInput.value);
+            }
+        });
+
+        const attractionIntersectionObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && loader && loader.getAttribute('data-nextPage')) {
+                    fetchAttractions(parseInt(loader.getAttribute('data-nextPage')), false, currentKeyword);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0
+        });
+        if (loader) attractionIntersectionObserver.observe(loader);
+        fetchMRTs();
+        fetchAttractions(0);
+    };
+    ClickActions();
 });
+
+
+
+
+
+
