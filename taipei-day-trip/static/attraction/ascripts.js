@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const attractionImagesContainer = document.querySelector('.attraction-images');
     const attractionNameElement = document.querySelector('.attraction-name');
-    const attractionCategoryElement = document.querySelector('.attraction-category');
-    const attractionMrtElement = document.querySelector('.attraction-mrt');
+    // const attractionCategoryElement = document.querySelector('.attraction-category');
+    // const attractionMrtElement = document.querySelector('.attraction-mrt');
+    const attractionCategoryandMrtElement = document.querySelector('.attraction-categoryandmrt');
     const descriptionElement = document.querySelector('.description');
     const addressElement = document.querySelector('.address');
     const transportElement = document.querySelector('.transport');
@@ -20,11 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
             data = result.data; 
 
             attractionNameElement.textContent = data.name;
-            attractionCategoryElement.textContent = data.category;
-            attractionMrtElement.textContent = data.mrt;
+            // attractionCategoryElement.textContent = data.category;
+            // attractionMrtElement.textContent = data.mrt;
+            attractionCategoryandMrtElement.textContent = `${data.category} at ${data.mrt}`;
             descriptionElement.textContent = data.description;
-            addressElement.textContent = `地址：${data.address}`;
-            transportElement.textContent = `交通：${data.transport}`;
+            addressElement.textContent = data.address;
+            transportElement.textContent = `捷運站名：${data.mrt}站，${data.transport}`;
 
             const mainImage = document.createElement('img');
             mainImage.src = data.images[currentImageIndex];

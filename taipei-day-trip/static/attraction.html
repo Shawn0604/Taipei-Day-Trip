@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>台北一日遊</title>
-  <link rel="stylesheet" type="text/css" href="/static/attraction/astyles.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/attraction/styles.css"/>
 </head>
 
 <body>
@@ -18,6 +18,7 @@
     </div>
   </div>
   <div class="attraction-container">
+
     <div class="attraction-images">
       <div class="arrows">
         <div class="left-arrow"></div>
@@ -28,16 +29,49 @@
     
     <div class="attraction-details">
       <div class="attraction-info">
-        <h1 class="attraction-name"></h1>
-        <h1 class="attraction-category"></h1>
-        <h1 class="attraction-mrt"></h1>
+        <div class="attraction-name"></div>
+        <div class="attraction-categoryandmrt"></div>
+      </div>
+      <div class="booking">
+        <div class="booking-title">訂購導覽行程</div>
+        <div class="booking-text">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+
+        <div class="choose-date-container">
+          <div class="choose-date-text">選擇日期：</div>
+          <div class="choose-date-calender-container">
+            <input type="date" class="choose-date-calender">
+          </div>
+        </div>
+
+        <div class="choose-datetime-container">
+          <div class="choose-datetime-text">選擇時間：</div> 
+          <div class="morning">
+            <input type="radio" value="上半天" name="time" id="upRadio" checked="">
+            <label for="upRadio" class="upRadioText">上半天</label>
+          </div>
+          <div class="afternoon">
+            <input type="radio" value="下半天" name="time" id="downRadio">
+            <label for="downRadio" class="downRadioText">下半天</label>
+          </div>
+        </div>
+
+        <div class="price-container">
+          <div class="price-text">導覽費用：</div>
+          <div class="price-value">新台幣 2000 元</div>
+        </div>
+        <div class="date-button">開始預約行程</div>
       </div>
     </div>
+
   </div>
+
+  <div class="separator-line"></div>
   <div class="attraction-description-container">
     <div class="attraction-description">
       <p class="description"></p>
+      <div class="address-title">景點地址：</div>
       <p class="address"></p>
+      <div class="transport-title">交通方式：</div>
       <p class="transport"></p>
     </div>
   </div>
