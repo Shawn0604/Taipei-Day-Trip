@@ -131,7 +131,7 @@ def get_attraction(attractionId: int):
             # print("Fetched attraction data:", attraction)
 
             # 使用正則表達式提取圖片 URL
-            images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
+            images = re.findall(r'(https?://\S+\.(?:jpg|png|JPG|PNG))', attraction['images'])
             # print("Parsed images:", images)
 
             result = {

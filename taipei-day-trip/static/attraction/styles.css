@@ -57,7 +57,6 @@ body {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: 20px;
 }
 
 .attraction-description-container {
@@ -75,14 +74,15 @@ body {
 }
 
 .attraction-images {
+  
   width: 100%;
   height: auto;
 }
 
 .attraction-details {
-  max-width: 600px;
+  /* max-width: 600px; */
   text-align: left;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .attraction-name {
@@ -107,33 +107,42 @@ body {
   border-radius: 5px;
 }
 
-.booking-title, .choose-date-text, .choose-datetime-text, .price-text {
+.booking-title, .choose-date-text, .price-text {
   font-size: 16px;
   font-weight: 700;
   text-align: left;
   color: #666666;
 }
+ .choose-datetime-text {
+  font-size: 16px;
+  font-weight: 700;
+  /* text-align: left; */
+  color: #666666;
 
-.input[type="radio"] {
+}
+
+input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #448899;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ffffff;
+  background-color: #FFFFFF;
   border-radius: 50%;
   outline: none;
   cursor: pointer;
+  /* transition: background-color 0.3s, border-color 0.3s; */
 }
 
-.input[type="radio"]:checked {
+input[type="radio"]:checked {
   background-color: #448899;
-  border-color: #448899;
-  border: 2px solid #FFFFFF;
+  /* border-color: #448899; */
+  border: 1px solid #FFFFFF;
 }
 
-.input[type="radio"]:focus {
+input[type="radio"]:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(68, 136, 153, 0.5);
+  box-shadow: 0 0 0  #FFFFFF;
 }
 
 .booking-text {
@@ -145,6 +154,7 @@ body {
 }
 
 .price-value {
+  margin-left: 5px;
   font-size: 16px;
   font-weight: 400;
   color: #666666;
@@ -159,16 +169,21 @@ body {
   color: #FFFFFF;
   background-color: #448899;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px;
   width: 154px;
   height: 36px;
 }
 
-.choose-date-container,
+
 .choose-datetime-container,
 .price-container {
   display: flex;
   height: 24px;
+  margin-top: 15px;
+}
+.choose-date-container {
+  display: flex;
+  height: 35px;
   margin-top: 15px;
 }
 
@@ -203,6 +218,14 @@ body {
   box-shadow: 0 0 0 2px #FFFFFF;
 }
 
+.choose-date-box {
+  flex: none;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  height: 35px;
+}
+
 .copyrighttext {
     width: 100%;
     height: 104px;
@@ -217,19 +240,129 @@ body {
     box-sizing: border-box;
   }
 
+  .separator-line {
+    width: 1200px;
+    border-top: 2px solid rgba(232, 232, 232, 1);
+    margin: 0 auto; /* 將分隔線居中 */
+  }
+  .arrows {
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 2;
+  }
+  .left-arrow, .right-arrow {
+    width: 36px;
+    height: 36px;
+    /* margin-left: 10px; */
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* background-size: 60%; */
+    transition: background-color 0.3s ease;
+    opacity: 0.8;
+  }
+  .left-arrow {
+    background-image: url('./aimages/left.png'); 
+    margin-left: 10px; 
+  }
+  .right-arrow {
+    background-image: url('./aimages/right.png');
+    margin-right: 10px; 
+  }
+  .circleBar {
+    position: absolute;
+    bottom: 12px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    opacity: 0.75;
+  }
+  .circle {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .circle.active {
+    background-color: #000000;
+  }
+  .morning, .afternoon {
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+  }
+  .upRadioText, .downRadioText {
+    margin-left: 3px;
+    /* display: flex; */
+    font-family: "Noto Sans TC";
+    font-weight: 400;
+    color: #666666;
+    /* line-height: 14px; */
+    align-items: center; 
+    text-align: center;
+}
+.address-title{
+  font-family: "Noto Sans TC";
+  font-weight: 700;
+  color: #666666;
+  
+}
+.transport-title{
+  font-family: "Noto Sans TC";
+  font-weight: 700;
+  color: #666666;
+}
+
 @media (max-width: 800px) {
   .separator-line {
     width: 100%;
     max-width: 100%;
   }
 
-  .attraction-details {
-    width: 100%;
-  }
-
   .attraction-container {
-    margin: 20px;
+    
+    flex-direction: column;
   }
+  .attraction-images {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    justify-content: center;
+    align-items: center; 
+    overflow: hidden;
+    
+}
+.attraction-images img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
+  .attraction-details {
+    justify-content: center;
+    margin: 20px;
+    margin-bottom: 40px;
+    margin-top: 40px; 
+  }
+  .main-image {
+    position: relative;
+    display: block;
+    width: 100%; 
+    }
 }
 
 @media (min-width: 800px) {
@@ -242,8 +375,9 @@ body {
     }
   
     .attraction-container {
-    margin-top: 40px;
-    margin-bottom: 40px;
+    /* margin-top: 40px;
+    margin-bottom: 40px; */
+    margin: 20px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -253,15 +387,18 @@ body {
     justify-content: center;
     height: 400px;
     width: auto;
-    margin-top: 40px;
-    margin: 20px;
+    gap: 30px;
+    /* margin-top: 40px;
+    margin-bottom: 40px; */
     margin: 0 auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
     }
     .attraction-images {
     position: relative;
     width: 100%;
-    height: auto;
-    flex: 1;
+    width: 540px; 
+  height: 400px; 
     }
     .attraction-description-container {
     display: flex;
@@ -270,42 +407,26 @@ body {
     padding: 20px;
     box-sizing: border-box;
     }
-    
     .attraction-description {
       flex: 1; 
       text-align: left; 
       margin-top: 20px; 
     }
-  
     .attraction-details {
-    margin-left: 30px;
+      max-width: 600px;
     flex: 2;
     text-align: left; 
     width: 540px; 
     }
-  
     .main-image {
-    position: relative;
-    display: block;
-    width: 100%; 
-    max-width: 100%;
-    height: 400px; 
-    /* object-fit: cover; */
-    border-radius: 5px;
-    margin-bottom: 10px;
-    }
-  
-    .separator-line {
       width: 100%;
-      max-width: 1200px;
-      margin: 20px auto;
+      height: 100%;
+      object-fit: cover;
     }
-  
     .attraction-info {
       display: block;
       text-align: left;
     }
-  
     .attraction-info h1 {
       font-size: 24px;
       margin-bottom: 5px;

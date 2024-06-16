@@ -59,7 +59,7 @@ body {
 }
 .navigation-bar {
   width: 100%;
-  max-width: 1920px;
+  /* max-width: 1920px; */
   height: 320px;
   background-image: url('./imgaes/welcome.png');
   background-size: cover;
