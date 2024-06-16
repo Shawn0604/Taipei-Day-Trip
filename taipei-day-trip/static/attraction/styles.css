@@ -107,18 +107,26 @@ body {
   border-radius: 5px;
 }
 
-.booking-title, .choose-date-text, .price-text {
+.booking-title, .price-text {
   font-size: 16px;
   font-weight: 700;
   text-align: left;
   color: #666666;
 }
- .choose-datetime-text {
+ .choose-datetime-text{
   font-size: 16px;
   font-weight: 700;
   /* text-align: left; */
   color: #666666;
 
+}
+.choose-date-text {
+  flex: none;
+  font-size: 16px;
+  font-weight: 700;
+  /* text-align: left; */
+  color: #666666;
+  flex-wrap: nowrap;
 }
 
 input[type="radio"] {
@@ -185,6 +193,7 @@ input[type="radio"]:focus {
   display: flex;
   height: 35px;
   margin-top: 15px;
+  flex-wrap: nowrap;
 }
 
 .choose-date-calender-container {
@@ -320,12 +329,28 @@ input[type="radio"]:focus {
   font-family: "Noto Sans TC";
   font-weight: 700;
   color: #666666;
+  margin-top:20px;
   
+}
+.address-title{
+  font-family: "Noto Sans TC";
+  font-weight: 700;
+  color: #666666;
+  margin-top:20px;
 }
 .transport-title{
   font-family: "Noto Sans TC";
   font-weight: 700;
   color: #666666;
+  margin-top:20px;
+  margin-bottom:3px;
+}
+.transport {
+  color: #666666;
+}
+.address {
+  color: #666666;
+  margin-top: 3px;
 }
 
 @media (max-width: 800px) {

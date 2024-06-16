@@ -7,11 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const transportElement = document.querySelector('.transport');
     const titleElement = document.querySelector('.title');
     const circleBar = document.querySelector('.circleBar');
-    const priceTextElement = document.querySelector('.price-value'); // 價格文本元素
-
+    const priceTextElement = document.querySelector('.price-value'); 
     let currentImageIndex = 0;
     let data = null;
-    let pricing = 2500; // 初始價格為 2500
+    let pricing = 2500;
 
     const fetchAttractionDetails = async () => {
         try {
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateAttractionDetails();
             setupImageSlider();
-            updatePricing(); // 初始化時更新價格
+            updatePricing(); 
         } catch (error) {
             console.error('Error fetching attraction details:', error);
         }
@@ -89,23 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     titleElement.addEventListener('click', () => {
-        window.location.href = '/';
+        window.location.href = 'http://52.202.64.48:8000/';
     });
 
-    // 監聽上半天和下半天選項的變化
+
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === '上半天') {
-                pricing = 2000; // 如果選擇了上半天，價格為 2000
+                pricing = 2000; 
             } else {
-                pricing = 2500; // 如果選擇了下半天，價格為 2500
+                pricing = 2500; 
             }
-            updatePricing(); // 更新價格文本顯示
+            updatePricing();
         });
     });
 
     const updatePricing = () => {
-        priceTextElement.textContent = `新台幣${pricing}元`; // 更新價格文本顯示
+        priceTextElement.textContent = `新台幣${pricing}元`; 
     };
 
     fetchAttractionDetails();
