@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // 新增圖片點擊事件，導向指定的 URL
         imageElement.addEventListener('click', () => {
-            window.location.href = `http://127.0.0.1:8000/attraction/${attraction.id}`;
+            window.location.href = `/attraction/${attraction.id}`;
         });
     
         const mrtTextElement = document.createElement('div');
