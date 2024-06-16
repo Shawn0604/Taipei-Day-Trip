@@ -362,6 +362,7 @@ input[type="radio"]:focus {
     position: relative;
     display: block;
     width: 100%; 
+    border-radius: 5px;
     }
 }
 
@@ -422,6 +423,7 @@ input[type="radio"]:focus {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 5px;
     }
     .attraction-info {
       display: block;
