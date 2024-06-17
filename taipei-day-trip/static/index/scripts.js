@@ -70,18 +70,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const createAttractionElement = (attraction) => {
         const attractionElement = document.createElement('div');
         attractionElement.classList.add('attraction');
-
+    
         const imageElement = document.createElement('img');
         imageElement.src = attraction.images.length > 0 ? attraction.images[0] : '';
         imageElement.alt = 'Attraction Image';
-
+    
+        // 新增圖片點擊事件，導向指定的 URL
+        imageElement.addEventListener('click', () => {
+            window.location.href = `/attraction/${attraction.id}`;
+        });
+    
         const mrtTextElement = document.createElement('div');
         mrtTextElement.classList.add('mrtText');
         const nameElement = document.createElement('div');
         nameElement.classList.add('name');
         nameElement.textContent = attraction.name;
         mrtTextElement.appendChild(nameElement);
-
+    
         const mrtTitleElement = document.createElement('div');
         mrtTitleElement.classList.add('mrtTitle');
         const mrtElement = document.createElement('div');
@@ -91,11 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryElement.classList.add('name');
         categoryElement.textContent = attraction.category;
         mrtTitleElement.append(mrtElement, categoryElement);
-
+    
         attractionElement.append(imageElement, mrtTextElement, mrtTitleElement);
-
+    
         return attractionElement;
     };
+    
 
     const searchAttractions = (page, isSearch = false, keyword = '') => {
         currentKeyword = keyword; 

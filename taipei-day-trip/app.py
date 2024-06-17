@@ -44,11 +44,7 @@ def connectMySQLserver():
     except mysql.connector.Error as e:
         print("資料庫連線失敗:", e)
         return None, None
-
-# Get attractions
 import re
-
-# Get attractions
 @app.get("/api/attractions")
 def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
     if page < 0:
@@ -108,15 +104,6 @@ def get_attractions(page: int = 0, keyword: Optional[str] = Query(None)):
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
 
-
-
-
-
-
-# Get attraction by id
-# Get attraction by id
-import re
-
 @app.get("/api/attraction/{attractionId}")
 def get_attraction(attractionId: int):
     con, cursor = connectMySQLserver()
@@ -131,7 +118,7 @@ def get_attraction(attractionId: int):
             # print("Fetched attraction data:", attraction)
 
             # 使用正則表達式提取圖片 URL
-            images = re.findall(r'(https?://\S+\.(?:jpg|png))', attraction['images'])
+            images = re.findall(r'(https?://\S+\.(?:jpg|png|JPG|PNG))', attraction['images'])
             # print("Parsed images:", images)
 
             result = {
@@ -156,8 +143,6 @@ def get_attraction(attractionId: int):
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
 
-
-# Get MRTs
 @app.get("/api/mrts")
 def get_mrts():
     con, cursor = connectMySQLserver()
