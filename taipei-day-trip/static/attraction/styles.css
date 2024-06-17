@@ -188,6 +188,7 @@ input[type="radio"]:focus {
   display: flex;
   height: 24px;
   margin-top: 15px;
+  white-space: nowrap;
 }
 .choose-date-container {
   display: flex;
