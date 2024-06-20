@@ -70,23 +70,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const createAttractionElement = (attraction) => {
         const attractionElement = document.createElement('div');
         attractionElement.classList.add('attraction');
-    
+
         const imageElement = document.createElement('img');
         imageElement.src = attraction.images.length > 0 ? attraction.images[0] : '';
         imageElement.alt = 'Attraction Image';
+
     
-        // 新增圖片點擊事件，導向指定的 URL
         imageElement.addEventListener('click', () => {
             window.location.href = `/attraction/${attraction.id}`;
         });
-    
+
         const mrtTextElement = document.createElement('div');
         mrtTextElement.classList.add('mrtText');
         const nameElement = document.createElement('div');
         nameElement.classList.add('name');
         nameElement.textContent = attraction.name;
         mrtTextElement.appendChild(nameElement);
-    
+
         const mrtTitleElement = document.createElement('div');
         mrtTitleElement.classList.add('mrtTitle');
         const mrtElement = document.createElement('div');
@@ -96,12 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryElement.classList.add('name');
         categoryElement.textContent = attraction.category;
         mrtTitleElement.append(mrtElement, categoryElement);
-    
+
         attractionElement.append(imageElement, mrtTextElement, mrtTitleElement);
-    
+
         return attractionElement;
     };
-    
 
     const searchAttractions = (page, isSearch = false, keyword = '') => {
         currentKeyword = keyword; 
@@ -113,45 +112,73 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const ClickActions = () => {
+        const popupmodal = document.getElementById('modal');
+        const popupLogin = document.getElementById('popup-login');
+        const popupSignup = document.getElementById('popup-signup');
+        const closeButtons = document.querySelectorAll('.popup-close');
+    
+        popupLogin.style.display = 'none';
+        popupSignup.style.display = 'none';
+    
         document.addEventListener('click', (event) => {
             const target = event.target;
-            if (target.classList.contains('search-icon')) {
-                searchAttractions(0, true, searchInput.value);
-            }
-            if (target.classList.contains('arrow-left')) {
-                scrollContainer(mrtContainer, -1000);
-            }
-            if (target.classList.contains('arrow-right')) {
-                scrollContainer(mrtContainer, 1000);
+    
+            if (target.classList.contains('login-button')) {
+                popupmodal.style.display = 'block';
+                popupLogin.style.display = 'block';
+            } else if (target.classList.contains('popup-close') || target.id === 'modal') {
+                popupmodal.style.display = 'none';
+                popupLogin.style.display = 'none';
+                popupSignup.style.display = 'none';
+            } else if (target.classList.contains('pop-register-button')) {
+                popupmodal.style.display = 'none';
+                popupLogin.style.display = 'none';
+                popupSignup.style.display = 'none';
+            } else if (target.id === 'signup-link') {
+                popupLogin.style.display = 'none';
+                popupSignup.style.display = 'block';
+            } else if (target.id === 'login-link') {
+                popupSignup.style.display = 'none';
+                popupLogin.style.display = 'block';
             }
         });
-
-        searchInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                searchAttractions(0, true, searchInput.value);
-            }
-        });
-
-        const attractionIntersectionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && loader && loader.getAttribute('data-nextPage')) {
-                    fetchAttractions(parseInt(loader.getAttribute('data-nextPage')), false, currentKeyword);
-                }
+    
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                popupmodal.style.display = 'none';
+                popupLogin.style.display = 'none';
+                popupSignup.style.display = 'none';
             });
-        }, {
-            root: null,
-            rootMargin: '0px',
-            threshold: 1.0
         });
-        if (loader) attractionIntersectionObserver.observe(loader);
-        fetchMRTs();
-        fetchAttractions(0);
-    };
+    };    
     ClickActions();
+    fetchMRTs();
+    fetchAttractions(0);
+
+    const mrtContainerElement = document.querySelector('.mrt-container');
+    const leftButton = document.querySelector('.arrow-left');
+    const rightButton = document.querySelector('.arrow-right');
+
+    leftButton.addEventListener('click', () => scrollContainer(mrtContainerElement, -200));
+    rightButton.addEventListener('click', () => scrollContainer(mrtContainerElement, 200));
+    
+    let currentPage = 0;
+    window.addEventListener('scroll', () => {
+        if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 200) {
+            const nextPage = parseInt(loader.getAttribute('data-nextPage'));
+            if (!isNaN(nextPage)) {
+                currentPage = nextPage;
+                fetchAttractions(currentPage);
+            }
+        }
+    });
+
+    searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            const keyword = searchInput.value;
+            searchAttractions(0, true, keyword);
+        }
+    });
 });
-
-
-
-
 
 

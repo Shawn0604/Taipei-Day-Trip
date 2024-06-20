@@ -17,16 +17,45 @@
       </div>
     </div>
   </div>
+  
+  <div class="modal" id="modal"></div>
+  
+  <div class="popup" id="popup-login">
+    <div class="popup-header"></div>
+    <span class="popup-close" ></span>
+    <div class="pop-text">登入會員帳號</div>
+    <input type="email" placeholder="輸入電子信箱" class="input-member">
+    <input type="password" placeholder="輸入密碼" class="input-member">
+    <button class="pop-register-button">登入帳戶</button>
+    <div class="pop-question">還沒有帳戶？
+      <span id="signup-link" class="pop-question-span">點此註冊</span>
+    </div>  
+  </div>
+
+  <div class="popup" id="popup-signup">
+    <div class="popup-header"></div>
+    <span class="popup-close" ></span>
+    <div class="pop-text">註冊會員帳號</div>
+    <input type="text" placeholder="輸入姓名" class="input-member">
+    <input type="email" placeholder="輸入電子郵件" class="input-member">
+    <input type="password" placeholder="輸入密碼" class="input-member">
+    <button class="pop-register-button">註冊新帳戶</button>
+    <div class="pop-question">已經有帳戶了？
+      <span id="login-link" class="pop-question-span">點此登入</span>
+    </div>  
+  </div>
+
   <div class="navigation-bar">
     <div class="navigtion-content">
       <div class="bigtext">輕鬆享受台北一日悠閒</div>
       <div class="smalltext">探索每個角落，體驗城市的深度旅遊行程</div>
       <div class="search">
-        <input type="text" placeholder="輸入景點名稱查詢">
+        <input type="text" placeholder="輸入景點名稱查詢" class="search-input">
         <button class="search-icon"></button>
       </div>
     </div>
   </div>
+
   <div class="listgroups">
     <button class="arrow-left"></button>
     <div class="mrt-container">
@@ -34,9 +63,12 @@
     </div>
     <button class="arrow-right"></button>
   </div>
+
   <div class="allattraction"></div>
   <div class="loader"></div>
   <div class="copyrighttext">COPYRIGHT © 2021 台北一日遊</div>
+
   <script src="./static/index/scripts.js"></script>
 </body>
 </html>
+

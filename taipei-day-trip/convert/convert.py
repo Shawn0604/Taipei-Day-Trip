@@ -31,7 +31,16 @@ CREATE TABLE IF NOT EXISTS attractions (
 )
 """)
 
-# 插入資料
+# 確保 member 表格存在，否則創建它
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS member (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL
+)
+""")
+
 # 插入資料
 for attraction in data['result']['results']:  # 確保從 'result' -> 'results' 中讀取資料
     name = attraction['name']
