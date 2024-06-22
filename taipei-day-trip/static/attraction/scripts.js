@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     titleElement.addEventListener('click', () => {
-        window.location.href = 'http://54.196.142.222:8000/';
+        window.location.href = 'http://34.224.28.249:8000/';
     });
 
 
