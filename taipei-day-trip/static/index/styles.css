@@ -61,7 +61,7 @@ body {
   width: 100%;
   /* max-width: 1920px; */
   height: 320px;
-  background-image: url('./imgaes/welcome.png');
+  background-image: url('./images/welcome.png');
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -123,7 +123,7 @@ body {
   background-color: #AABBCC;
   border: none;
   cursor: pointer;
-  background-image: url('./imgaes/search.png');
+  background-image: url('./images/search.png');
   background-size: cover;
   box-sizing: border-box;
 }
@@ -160,10 +160,10 @@ body {
   opacity: 1;
 }
 .arrow-left {
-  background-image: url('./imgaes/left.png');
+  background-image: url('./images/left.png');
 }
 .arrow-right {
-  background-image: url('./imgaes/right.png');
+  background-image: url('./images/right.png');
 }
 .mrt-container {
   width: 100%;
@@ -365,7 +365,7 @@ body {
 }
 
 .popup-close {
-  background-image: url('./imgaes/close.png');
+  background-image: url('./images/close.png');
   position: absolute;
   width: 30px;
   height: 30px;
@@ -417,11 +417,21 @@ body {
   font-size: 16px;
   color: #666666;
 }
-.fail-login,.success-login,.fail-signup,.success-signup {
+.success-login,.success-signup {
+  padding-top: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #079436;
+  font-family: "Noto Sans TC";
+  font-weight: 500;
+}
+.fail-login,.fail-signup {
   padding-top: 10px;
   text-align: center;
   font-size: 16px;
   color: #d73030;
+  font-family: "Noto Sans TC";
+  font-weight: 500;
 }
 
 

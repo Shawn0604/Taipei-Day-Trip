@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        console.log('Attempting to login with:', email, password);
+        // console.log('Attempting to login with:', email, password);
         
         try {
             const response = await fetch('/api/user/auth', {
@@ -144,13 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            console.log('Login response:', data); 
+            // console.log('Login response:', data); 
 
             if (response.ok) {
                 localStorage.setItem('token', data.token);  // 將 token 存儲在本地存儲
                 showLogoutButton();  // 顯示登出按鈕
                 document.querySelector('.success-login').style.display = 'block';  // 顯示登入成功消息
                 document.querySelector('.fail-login').style.display = 'none';  // 隱藏登入失敗消息
+                hideModal(); 
             } else {
                 document.querySelector('.success-login').style.display = 'none';  // 隱藏登入成功消息
                 document.querySelector('.fail-login').style.display = 'block';  // 顯示登入失敗消息
@@ -204,6 +205,13 @@ document.addEventListener('DOMContentLoaded', () => {
         showLogoutButton();
     } else {
         showLoginButton();
+    }
+
+    function hideModal() {
+        const popupmodal = document.getElementById('modal');
+        const popupLogin = document.getElementById('popup-login');
+        popupmodal.style.display = 'none';
+        popupLogin.style.display = 'none';
     }
 
     function showLogoutButton() {
