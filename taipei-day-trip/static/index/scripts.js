@@ -129,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
+        console.log('Attempting to login with:', email, password);
+        
         try {
             const response = await fetch('/api/user/auth', {
                 method: 'PUT',
@@ -141,28 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
-            if (!response.ok) {
-                if (response.status === 400) {
-                    failLoginMessage.style.display = 'block';
-                    successLoginMessage.style.display = 'none';
-                } else {
-                    const errorMessage = await response.json();
-                    throw new Error(errorMessage.detail);
-                }
-            } else {
-                successLoginMessage.style.display = 'block';
-                failLoginMessage.style.display = 'none';
-            }
+            const data = await response.json();
+            console.log('Login response:', data); 
 
-            // 清空表单
-            loginForm.reset();
+            if (response.ok) {
+                localStorage.setItem('token', data.token);  // 將 token 存儲在本地存儲
+                showLogoutButton();  // 顯示登出按鈕
+                document.querySelector('.success-login').style.display = 'block';  // 顯示登入成功消息
+                document.querySelector('.fail-login').style.display = 'none';  // 隱藏登入失敗消息
+            } else {
+                document.querySelector('.success-login').style.display = 'none';  // 隱藏登入成功消息
+                document.querySelector('.fail-login').style.display = 'block';  // 顯示登入失敗消息
+            }
         } catch (error) {
-            console.error('Login error:', error.message);
+            console.error('登入時出現錯誤:', error);
         }
     });
 
     registerForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // 阻止表单的默认提交行为
+        event.preventDefault(); 
 
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
@@ -194,11 +193,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 failSignupMessage.style.display = 'none';
             }
 
-            // 清空表单
             registerForm.reset();
         } catch (error) {
             console.error('Registration error:', error.message);
         }
+    });
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        showLogoutButton();
+    } else {
+        showLoginButton();
+    }
+
+    function showLogoutButton() {
+        document.querySelector('.login-button').style.display = 'none';
+        document.querySelector('.logout-button').style.display = 'block';
+    }
+
+    function showLoginButton() {
+        document.querySelector('.login-button').style.display = 'block';
+        document.querySelector('.logout-button').style.display = 'none';
+    }
+
+    document.querySelector('.logout-button').addEventListener('click', function() {
+        localStorage.removeItem('token');  
+        showLoginButton();  
     });
 
     const ClickActions = () => {
@@ -286,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
 
 
