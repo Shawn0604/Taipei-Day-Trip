@@ -143,19 +143,42 @@ document.addEventListener('DOMContentLoaded', () => {
             // console.log('Login response:', data); 
 
             if (response.ok) {
-                localStorage.setItem('token', data.token);  // 將 token 存儲在本地存儲
-                showLogoutButton();  // 顯示登出按鈕
-                document.querySelector('.success-login').style.display = 'block';  // 顯示登入成功消息
-                document.querySelector('.fail-login').style.display = 'none';  // 隱藏登入失敗消息
+                localStorage.setItem('token', data.token);  
+                showLogoutButton();  
+                document.querySelector('.success-login').style.display = 'block';  
+                document.querySelector('.fail-login').style.display = 'none';  
                 hideModal(); 
+                fetchCurrentUser();
             } else {
-                document.querySelector('.success-login').style.display = 'none';  // 隱藏登入成功消息
-                document.querySelector('.fail-login').style.display = 'block';  // 顯示登入失敗消息
+                document.querySelector('.success-login').style.display = 'none';  
+                document.querySelector('.fail-login').style.display = 'block';  
             }
         } catch (error) {
             console.error('登入時出現錯誤:', error);
         }
     });
+
+    const fetchCurrentUser = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const response = await fetch('/api/user/auth', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+            } else {
+                console.error('获取用户信息失败');
+            }
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+        }
+    };
 
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault(); 
@@ -199,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (token) {
         showLogoutButton();
+        fetchCurrentUser(); 
     } else {
         showLoginButton();
     }
