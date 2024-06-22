@@ -417,6 +417,14 @@ body {
   font-size: 16px;
   color: #666666;
 }
+.fail-login,.success-login,.fail-signup,.success-signup {
+  padding-top: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #d73030;
+}
+
+
 
 .pop-question-span {
   cursor: pointer;

@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imageElement.src = attraction.images.length > 0 ? attraction.images[0] : '';
         imageElement.alt = 'Attraction Image';
 
-    
         imageElement.addEventListener('click', () => {
             window.location.href = `/attraction/${attraction.id}`;
         });
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const searchAttractions = (page, isSearch = false, keyword = '') => {
-        currentKeyword = keyword; 
+        currentKeyword = keyword;
         fetchAttractions(page, isSearch, keyword);
     };
 
@@ -113,9 +112,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
+    const failLoginMessage = document.querySelector('.fail-login');
+    const successLoginMessage = document.querySelector('.success-login');
+    const failSignupMessage = document.querySelector('.fail-signup');
+    const successSignupMessage = document.querySelector('.success-signup');
+
+    // 隐藏所有提示信息
+    failLoginMessage.style.display = 'none';
+    successLoginMessage.style.display = 'none';
+    failSignupMessage.style.display = 'none';
+    successSignupMessage.style.display = 'none';
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // 阻止表单的默认提交行为
+
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const response = await fetch('/api/user/auth', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                if (response.status === 400) {
+                    failLoginMessage.style.display = 'block';
+                    successLoginMessage.style.display = 'none';
+                } else {
+                    const errorMessage = await response.json();
+                    throw new Error(errorMessage.detail);
+                }
+            } else {
+                successLoginMessage.style.display = 'block';
+                failLoginMessage.style.display = 'none';
+            }
+
+            // 清空表单
+            loginForm.reset();
+        } catch (error) {
+            console.error('Login error:', error.message);
+        }
+    });
 
     registerForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
+        event.preventDefault(); // 阻止表单的默认提交行为
+
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
@@ -135,60 +183,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json();
-                throw new Error(errorMessage.detail);
+                if (response.status === 400 && errorMessage.detail === 'Email already registered') {
+                    failSignupMessage.style.display = 'block';
+                    successSignupMessage.style.display = 'none';
+                } else {
+                    throw new Error(errorMessage.detail);
+                }
+            } else {
+                successSignupMessage.style.display = 'block';
+                failSignupMessage.style.display = 'none';
             }
 
-            const result = await response.json();
-            console.log('User registered successfully:', result.message);
-
-            
+            // 清空表单
             registerForm.reset();
         } catch (error) {
             console.error('Registration error:', error.message);
         }
     });
 
-    loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        try {
-            const response = await fetch('/api/user/auth', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            if (!response.ok) {
-                const errorMessage = await response.json();
-                throw new Error(errorMessage.detail);
-            }
-
-            const result = await response.json();
-            console.log('User logged in successfully:', result.token);
-
-           
-            loginForm.reset();
-        } catch (error) {
-            console.error('Login error:', error.message);
-        }
-    });
-
-    
-
-
     const ClickActions = () => {
         const popupmodal = document.getElementById('modal');
         const popupLogin = document.getElementById('popup-login');
         const popupSignup = document.getElementById('popup-signup');
         const closeButtons = document.querySelectorAll('.popup-close');
+        const failLoginMessage = document.querySelector('.fail-login');
+        const successLoginMessage = document.querySelector('.success-login');
+        const failSignupMessage = document.querySelector('.fail-signup');
+        const successSignupMessage = document.querySelector('.success-signup');
     
         const handleButtonClick = (event) => {
             const target = event.target;
@@ -196,23 +217,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target.classList.contains('login-button')) {
                 popupmodal.style.display = 'block';
                 popupLogin.style.display = 'block';
+                hideMessages();
                 event.stopPropagation();
             } else if (target.classList.contains('popup-close') || target.id === 'modal') {
                 popupmodal.style.display = 'none';
                 popupLogin.style.display = 'none';
                 popupSignup.style.display = 'none';
+                hideMessages();
                 event.stopPropagation();
             } else if (target.classList.contains('pop-register-button')) {
-                popupmodal.style.display = 'none';
-                popupLogin.style.display = 'none';
-                popupSignup.style.display = 'none';
             } else if (target.id === 'signup-link') {
                 popupLogin.style.display = 'none';
                 popupSignup.style.display = 'block';
+                hideMessages();
             } else if (target.id === 'login-link') {
                 popupSignup.style.display = 'none';
                 popupLogin.style.display = 'block';
+                hideMessages();
             }
+        };
+    
+        const hideMessages = () => {
+            failLoginMessage.style.display = 'none';
+            successLoginMessage.style.display = 'none';
+            failSignupMessage.style.display = 'none';
+            successSignupMessage.style.display = 'none';
         };
     
         document.addEventListener('click', handleButtonClick);
@@ -222,11 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 popupmodal.style.display = 'none';
                 popupLogin.style.display = 'none';
                 popupSignup.style.display = 'none';
+                hideMessages();
             });
         });
     };
     
-    ClickActions();    
+    ClickActions();
+    
     fetchMRTs();
     fetchAttractions(0);
 
@@ -236,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     leftButton.addEventListener('click', () => scrollContainer(mrtContainerElement, -200));
     rightButton.addEventListener('click', () => scrollContainer(mrtContainerElement, 200));
-    
+
     let currentPage = 0;
     window.addEventListener('scroll', () => {
         if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 200) {
@@ -255,6 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
 
 
 
