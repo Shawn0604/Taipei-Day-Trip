@@ -1,15 +1,19 @@
 from typing import Optional
-from fastapi import FastAPI, Request, Query, HTTPException
+from fastapi import FastAPI, Request, Query, HTTPException,Depends
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.security import OAuth2PasswordBearer
 import mysql.connector
 from fastapi.staticfiles import StaticFiles
 from mysql.connector import Error
+from config import Config
+from pydantic import BaseModel
+import datetime
+import jwt
 from config import Config
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
-# Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
 async def index(request: Request):
     return FileResponse("./static/index.html", media_type="text/html")
@@ -26,7 +30,6 @@ async def booking(request: Request):
 async def thankyou(request: Request):
     return FileResponse("./static/thankyou.html", media_type="text/html")
 
-# Connect to MySQL server
 def connectMySQLserver():
     try:
         con = mysql.connector.connect(
@@ -36,7 +39,7 @@ def connectMySQLserver():
             database="website"
         )
         if con.is_connected():
-            cursor = con.cursor(dictionary=True)  # 使用 dictionary cursor
+            cursor = con.cursor(dictionary=True)  
             return con, cursor
         else:
             print("資料庫連線未成功")
@@ -116,8 +119,6 @@ def get_attraction(attractionId: int):
                 raise HTTPException(status_code=400, detail="景點編號不正確")
 
             # print("Fetched attraction data:", attraction)
-
-            # 使用正則表達式提取圖片 URL
             images = re.findall(r'(https?://\S+\.(?:jpg|png|JPG|PNG))', attraction['images'])
             # print("Parsed images:", images)
 
@@ -162,6 +163,138 @@ def get_mrts():
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
 
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+SECRET_KEY = Config.SECRET_KEY
+ALGORITHM = Config.ALGORITHM
+
+# 生成 Access Token
+async def create_access_token(data: dict, expires_delta: datetime.timedelta = datetime.timedelta(days=7)):
+    to_encode = data.copy()
+    expire = datetime.datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+# 解析 Access Token
+async def decode_access_token(token: str):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return decoded_token if decoded_token["exp"] >= datetime.datetime.utcnow().timestamp() else None
+    except jwt.PyJWTError:
+        return None
+
+# 驗證當前用戶
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = await decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return payload
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+
+@app.post("/api/user")
+def create_user(user: UserCreate):
+    con, cursor = connectMySQLserver()
+    if cursor is not None:
+        try:
+            cursor.execute("SELECT * FROM member WHERE email = %s", (user.email,))
+            if cursor.fetchone():
+                raise HTTPException(status_code=400, detail="Email already registered")
+            cursor.execute(
+                "INSERT INTO member (name, email, password) VALUES (%s, %s, %s)",
+                (user.name, user.email, user.password)
+            )
+            con.commit()
+            return {"message": "User created successfully"}
+        except mysql.connector.Error as err:
+            print("Database error:", err)
+            raise HTTPException(status_code=500, detail="Internal server error")
+        finally:
+            cursor.close()
+            con.close()
+    else:
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+
+@app.get("/api/user/auth", response_model=UserResponse)
+async def read_user(current_user: dict = Depends(get_current_user)):
+    try:
+        if not current_user:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        con, cursor = connectMySQLserver()
+        if cursor is not None:
+            try:
+                cursor.execute("SELECT id, name, email FROM member WHERE id=%s", (current_user["id"],))
+                user = cursor.fetchone()
+                if not user:
+                    raise HTTPException(status_code=404, detail="User not found")
+
+                return UserResponse(id=user['id'], name=user['name'], email=user['email'])
+            except mysql.connector.Error as err:
+                print("Database error:", err)
+                raise HTTPException(status_code=500, detail="Internal server error")
+            finally:
+                cursor.close()
+                con.close()
+        else:
+            raise HTTPException(status_code=500, detail="Internal server error")
+    except HTTPException as http_exc:
+        print(f"HTTP Exception: {str(http_exc)}")  
+        return JSONResponse(status_code=http_exc.status_code, content={"error": True, "message": http_exc.detail})
+    except Exception as e:
+        print(f"General Exception: {str(e)}")  
+        return JSONResponse(status_code=500, content={"error": True, "message": f"Internal server error: {str(e)}"})
+
+class UserCheckin(BaseModel):
+    email: str
+    password: str
+
+@app.put("/api/user/auth")
+async def update_user(user: UserCheckin):
+    try:
+        con, cursor = connectMySQLserver()
+        if cursor is not None:
+            try:
+                cursor.execute("SELECT * FROM member WHERE email=%s AND password=%s", (user.email, user.password))
+                user_data = cursor.fetchone()
+                if not user_data:
+                    return JSONResponse(status_code=400, content={
+                        "error": True,
+                        "message": "Incorrect email or password"
+                    })
+
+                access_token = await create_access_token(data={
+                    "id": user_data["id"],
+                    "name": user_data["name"],
+                    "email": user_data["email"],
+                })
+
+                return {"token": access_token}
+            except mysql.connector.Error as err:
+                print("Database error:", err)
+                raise HTTPException(status_code=500, detail="Internal server error")
+            finally:
+                cursor.close()
+                con.close()
+        else:
+            raise HTTPException(status_code=500, detail="Internal server error")
+    except HTTPException as http_exc:
+        print(f"HTTP Exception: {str(http_exc)}") 
+        return JSONResponse(status_code=http_exc.status_code, content={"error": True, "message": http_exc.detail})
+    except Exception as e:
+        print(f"General Exception: {str(e)}")  
+        return JSONResponse(status_code=500, content={"error": True, "message": f"Internal server error: {str(e)}"})
+
+    
 def close_connection_pool():
     pass
 

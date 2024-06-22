@@ -111,25 +111,97 @@ document.addEventListener('DOMContentLoaded', () => {
         container.scrollBy({ top: 0, left: distance, behavior: 'smooth' });
     };
 
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+
+        try {
+            const response = await fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                throw new Error(errorMessage.detail);
+            }
+
+            const result = await response.json();
+            console.log('User registered successfully:', result.message);
+
+            
+            registerForm.reset();
+        } catch (error) {
+            console.error('Registration error:', error.message);
+        }
+    });
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const response = await fetch('/api/user/auth', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                throw new Error(errorMessage.detail);
+            }
+
+            const result = await response.json();
+            console.log('User logged in successfully:', result.token);
+
+           
+            loginForm.reset();
+        } catch (error) {
+            console.error('Login error:', error.message);
+        }
+    });
+
+    
+
+
     const ClickActions = () => {
         const popupmodal = document.getElementById('modal');
         const popupLogin = document.getElementById('popup-login');
         const popupSignup = document.getElementById('popup-signup');
         const closeButtons = document.querySelectorAll('.popup-close');
     
-        popupLogin.style.display = 'none';
-        popupSignup.style.display = 'none';
-    
-        document.addEventListener('click', (event) => {
+        const handleButtonClick = (event) => {
             const target = event.target;
     
             if (target.classList.contains('login-button')) {
                 popupmodal.style.display = 'block';
                 popupLogin.style.display = 'block';
+                event.stopPropagation();
             } else if (target.classList.contains('popup-close') || target.id === 'modal') {
                 popupmodal.style.display = 'none';
                 popupLogin.style.display = 'none';
                 popupSignup.style.display = 'none';
+                event.stopPropagation();
             } else if (target.classList.contains('pop-register-button')) {
                 popupmodal.style.display = 'none';
                 popupLogin.style.display = 'none';
@@ -141,7 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 popupSignup.style.display = 'none';
                 popupLogin.style.display = 'block';
             }
-        });
+        };
+    
+        document.addEventListener('click', handleButtonClick);
     
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -150,8 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 popupSignup.style.display = 'none';
             });
         });
-    };    
-    ClickActions();
+    };
+    
+    ClickActions();    
     fetchMRTs();
     fetchAttractions(0);
 
@@ -180,5 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+
+
+
+
+
 
 
