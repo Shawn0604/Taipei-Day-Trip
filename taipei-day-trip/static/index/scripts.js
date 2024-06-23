@@ -165,24 +165,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchCurrentUser = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) return;
-
+            if (!token) {
+                console.error('Token 不存在');
+                return;
+            }
+    
             const response = await fetch('/api/user/auth', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+    
             if (response.ok) {
-                const user = await response.json();
+                const userResponse = await response.json();
+                const user = userResponse.data;
+                console.log('User info:', user);
+                // 在这里处理用户信息，例如更新页面上的用户信息展示等操作
             } else {
-                console.error('获取用户信息失败');
+                if (response.status === 401) {
+                    console.error('未授权需要重新登录');
+                } else if (response.status === 404) {
+                    console.error('用户未找到');
+                } else {
+                    console.error('获取用户信息失败，HTTP 状态码:', response.status);
+                }
             }
         } catch (error) {
-            console.error('Error fetching user info:', error);
+            console.error('获取用户信息时出错:', error);
         }
     };
+    
+    
 
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault(); 

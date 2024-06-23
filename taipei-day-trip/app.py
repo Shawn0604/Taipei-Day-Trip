@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from mysql.connector import Error
 from config import Config
 from pydantic import BaseModel
-import datetime
+from datetime import datetime, timedelta
 import jwt
 from config import Config
 
@@ -161,14 +161,16 @@ def get_mrts():
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
-
-
+    
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SECRET_KEY = Config.SECRET_KEY
 ALGORITHM = Config.ALGORITHM
 
 async def generate_token(data: dict) -> str:
-    encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    expire = datetime.utcnow() + timedelta(days=7)
+    data_to_encode = data.copy()
+    data_to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 async def get_token_data(token: str) -> dict:
@@ -183,8 +185,7 @@ async def get_user_info(token: str = Depends(oauth2_scheme)) -> dict:
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     return payload
-
-
+    
 class UserCreate(BaseModel):
     name: str
     email: str
@@ -197,29 +198,33 @@ def create_user(user: UserCreate):
         try:
             cursor.execute("SELECT * FROM member WHERE email = %s", (user.email,))
             if cursor.fetchone():
-                raise HTTPException(status_code=400, detail="Email already registered")
+                raise HTTPException(status_code=400, detail={"error": True, "message": "Email already registered"})
 
-            # 執行插入新用戶的SQL語句
+            # 執行插入新用戶的 SQL 語句
             cursor.execute(
                 "INSERT INTO member (name, email, password) VALUES (%s, %s, %s)",
                 (user.name, user.email, user.password)
             )
             con.commit()
-            return {"message": "User created successfully"}
+            return {"ok": True}
         except mysql.connector.Error as err:
             print("Database error:", err)
-            raise HTTPException(status_code=500, detail="Internal server error")
+            raise HTTPException(status_code=500, detail={"error": True, "message": "Internal server error"})
         finally:
             cursor.close()
             con.close()
     else:
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail={"error": True, "message": "Internal server error"})
 
 
-class UserResponse(BaseModel):
+
+class User(BaseModel):
     id: int
     name: str
     email: str
+
+class UserResponse(BaseModel):
+    data: User
 
 @app.get("/api/user/auth", response_model=UserResponse)
 async def read_user(current_user: dict = Depends(get_user_info)):
@@ -235,7 +240,7 @@ async def read_user(current_user: dict = Depends(get_user_info)):
                 if not user:
                     raise HTTPException(status_code=404, detail="User not found")
 
-                return UserResponse(id=user['id'], name=user['name'], email=user['email'])
+                return UserResponse(data=User(id=user['id'], name=user['name'], email=user['email']))
             except mysql.connector.Error as err:
                 print("Database error:", err)
                 raise HTTPException(status_code=500, detail="Internal server error")
@@ -245,11 +250,13 @@ async def read_user(current_user: dict = Depends(get_user_info)):
         else:
             raise HTTPException(status_code=500, detail="Internal server error")
     except HTTPException as http_exc:
-        print(f"HTTP Exception: {str(http_exc)}")  
+        print(f"HTTP Exception: {str(http_exc)}")
         return JSONResponse(status_code=http_exc.status_code, content={"error": True, "message": http_exc.detail})
     except Exception as e:
-        print(f"General Exception: {str(e)}")  
+        print(f"General Exception: {str(e)}")
         return JSONResponse(status_code=500, content={"error": True, "message": f"Internal server error: {str(e)}"})
+
+
 
 class UserCheckin(BaseModel):
     email: str
@@ -278,19 +285,18 @@ async def update_user(user: UserCheckin):
                 return {"token": access_token}
             except mysql.connector.Error as err:
                 print("Database error:", err)
-                raise HTTPException(status_code=500, detail="Internal server error")
+                raise HTTPException(status_code=500, detail={"error": True, "message": "Internal server error"})
             finally:
                 cursor.close()
                 con.close()
         else:
-            raise HTTPException(status_code=500, detail="Internal server error")
+            raise HTTPException(status_code=500, detail={"error": True, "message": "Internal server error"})
     except HTTPException as http_exc:
-        print(f"HTTP Exception: {str(http_exc)}") 
-        return JSONResponse(status_code=http_exc.status_code, content={"error": True, "message": http_exc.detail})
+        print(f"HTTP Exception: {str(http_exc)}")
+        return {"error": True, "message": "HTTP Exception occurred"}
     except Exception as e:
-        print(f"General Exception: {str(e)}")  
-        return JSONResponse(status_code=500, content={"error": True, "message": f"Internal server error: {str(e)}"})
-
+        print(f"General Exception: {str(e)}")
+        return {"error": True, "message": f"Internal server error: {str(e)}"}
     
 def close_connection_pool():
     pass

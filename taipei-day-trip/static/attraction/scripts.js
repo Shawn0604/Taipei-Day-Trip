@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const user = await response.json();
             } else {
-                console.error('获取用户信息失败');
+                console.error('獲取用戶訊息失敗');
             }
         } catch (error) {
             console.error('Error fetching user info:', error);
