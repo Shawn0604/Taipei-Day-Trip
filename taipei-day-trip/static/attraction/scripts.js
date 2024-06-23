@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json();
-                if (response.status === 400 && errorMessage.detail === 'Email already registered') {
+                if (response.status === 400 && errorMessage.detail.message === 'Email already registered') {
                     failSignupMessage.style.display = 'block';
                     successSignupMessage.style.display = 'none';
                 } else {

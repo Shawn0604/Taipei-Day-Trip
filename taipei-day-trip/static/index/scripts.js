@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const userResponse = await response.json();
                 const user = userResponse.data;
-                console.log('User info:', user);
+                // console.log('User info:', user);
                 // 在这里处理用户信息，例如更新页面上的用户信息展示等操作
             } else {
                 if (response.status === 401) {
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json();
-                if (response.status === 400 && errorMessage.detail === 'Email already registered') {
+                if (response.status === 400 && errorMessage.detail.message === 'Email already registered') {
                     failSignupMessage.style.display = 'block';
                     successSignupMessage.style.display = 'none';
                 } else {
