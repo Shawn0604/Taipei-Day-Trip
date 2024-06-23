@@ -5,6 +5,7 @@ body {
   padding: 0;
   font-family: "Noto Sans TC";
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 .navigation {
   background-color: #FFFFFF;
@@ -36,7 +37,7 @@ body {
   box-sizing: border-box;
   white-space: nowrap; 
 }
-.booking-button, .login-button {
+.booking-button, .login-button,.logout-button {
   border: 0px;
   font-size: 16px;
   font-family: "Noto Sans TC";
@@ -61,7 +62,7 @@ body {
   width: 100%;
   /* max-width: 1920px; */
   height: 320px;
-  background-image: url('./imgaes/welcome.png');
+  background-image: url('./images/welcome.png');
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -123,7 +124,7 @@ body {
   background-color: #AABBCC;
   border: none;
   cursor: pointer;
-  background-image: url('./imgaes/search.png');
+  background-image: url('./images/search.png');
   background-size: cover;
   box-sizing: border-box;
 }
@@ -160,10 +161,10 @@ body {
   opacity: 1;
 }
 .arrow-left {
-  background-image: url('./imgaes/left.png');
+  background-image: url('./images/left.png');
 }
 .arrow-right {
-  background-image: url('./imgaes/right.png');
+  background-image: url('./images/right.png');
 }
 .mrt-container {
   width: 100%;
@@ -314,19 +315,138 @@ body {
   box-sizing: border-box;
 }
 .booking-button:first-child,
-.login-button:first-child {
+.login-button:first-child ,.logout-button:first-child{
   border-right: none;
 }
 .booking-button:last-child,
-.login-button:last-child {
+.login-button:last-child ,.logout-button:last-child{
   border-left: none;
 }
 .booking-button:hover,
-.login-button:hover {
+.login-button:hover,.logout-button:hover {
   background-color: #81bdd1;
 }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.popup {
+  position: fixed;
+  height: auto;
+  width: 310px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px;
+  z-index: 1000;
+  display: none;
+  text-align: center;
+}
+
+.popup-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px; 
+  background-color:#448899;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.popup-close {
+  background-image: url('./images/close.png');
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: 10px;
+  top: 20px;
+  cursor: pointer;
+  background-size: cover;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.pop-text {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: "Noto Sans TC";
+  font-weight: 700;
+  color: #666666;
+  font-size: 24px;
+}
+
+.input-member {
+  width: 310px;
+  max-width: 100%; 
+  height: 47px;
+  font-size: 16px;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(204, 204, 204, 1);
+  box-sizing: border-box; 
+}
+
+.pop-register-button {
+  width: 100%;
+  padding: 15px;
+  background-color:#448899;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  height: 47px;
+  
+}
+.pop-question {
+  margin: 10px 15px 0px 15px;
+  text-align: center;
+  font-size: 16px;
+  color: #666666;
+}
+.success-login,.success-signup {
+  padding-top: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #079436;
+  font-family: "Noto Sans TC";
+  font-weight: 500;
+}
+.fail-login,.fail-signup {
+  padding-top: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #d73030;
+  font-family: "Noto Sans TC";
+  font-weight: 500;
+}
+
+
+
+.pop-question-span {
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+}
+
 @media (min-width: 1200px) {
-    .booking-button, .login-button {
+    .booking-button, .login-button,.logout-button {
       display: block; 
     }
     .listgroups{
@@ -387,7 +507,7 @@ body {
     }
   }
 @media (min-width: 361px) and (max-width: 1199px) {
-    .booking-button, .login-button {
+    .booking-button, .login-button,.logout-button {
       display: block; 
     }
     .navigation{
@@ -465,7 +585,7 @@ body {
     }
   }
   @media (max-width: 360px) {
-    .booking-button, .login-button {
+    .booking-button, .login-button,.logout-button {
       display: block; 
     }
     .navigation{
