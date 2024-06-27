@@ -298,6 +298,33 @@ async def update_user(user: UserCheckin):
         print(f"General Exception: {str(e)}")
         return {"error": True, "message": f"Internal server error: {str(e)}"}
     
+class BookingDataPost(BaseModel):
+    attractionId: int
+    date: str
+    time: str
+    price: int
+
+@app.post("/api/booking")
+async def create_booking(bookings: BookingDataPost, current_user: dict = Depends(get_user_info)):
+    con, cursor = connectMySQLserver()
+    if cursor is not None:
+        try:
+            # cursor.execute("DELETE FROM booking WHERE userId = %s", (current_user["id"],))
+
+            cursor.execute("INSERT INTO booking (attractionId, date, time, price) VALUES (%s, %s, %s, %s, %s)",
+            (bookings.attractionId, bookings.date, bookings.time, bookings.price))
+            con.commit()
+            return {"ok": "true"}
+        except mysql.connector.Error as err:
+            print("Database Error:", err)
+            return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+        finally:
+            cursor.close()
+            con.close()
+    else:
+        return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
+    
 def close_connection_pool():
     pass
 

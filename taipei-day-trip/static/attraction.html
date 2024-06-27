@@ -20,40 +20,38 @@
   </div>
 
   <div class="modal" id="modal"></div>
-<div class="popup" id="popup-login">
-  <div class="popup-header"></div>
-  <span class="popup-close"></span>
-  <div class="pop-text">登入會員帳號</div>
-  <form id="login-form">
+  <div class="popup" id="popup-login">
+    <div class="popup-header"></div>
+    <span class="popup-close"></span>
+    <div class="pop-text">登入會員帳號</div>
+    <form id="login-form">
       <input type="email" id="login-email" placeholder="輸入電子信箱" class="input-member">
       <input type="password" id="login-password" placeholder="輸入密碼" class="input-member">
       <button type="submit" class="pop-register-button">登入帳戶</button>
       <div class="success-login">登入成功</div>
       <div class="fail-login">電子郵件或密碼錯誤</div>
-  </form>
-  <div class="pop-question">還沒有帳戶？
+    </form>
+    <div class="pop-question">還沒有帳戶？
       <span id="signup-link" class="pop-question-span">點此註冊</span>
+    </div>
   </div>
-</div>
 
-<div class="popup" id="popup-signup">
-  <div class="popup-header"></div>
-  <span class="popup-close"></span>
-  <div class="pop-text">註冊會員帳號</div>
-  <form id="register-form">
+  <div class="popup" id="popup-signup">
+    <div class="popup-header"></div>
+    <span class="popup-close"></span>
+    <div class="pop-text">註冊會員帳號</div>
+    <form id="register-form">
       <input type="text" id="register-name" placeholder="輸入姓名" class="input-member">
       <input type="email" id="register-email" placeholder="輸入電子郵件" class="input-member">
       <input type="password" id="register-password" placeholder="輸入密碼" class="input-member">
       <button type="submit" class="pop-register-button">註冊新帳戶</button>
       <div class="success-signup">註冊成功，請登入系統</div>
       <div class="fail-signup">該電子郵件已註冊過帳戶</div>
-  </form>
-  <div class="pop-question">已經有帳戶了？
+    </form>
+    <div class="pop-question">已經有帳戶了？
       <span id="login-link" class="pop-question-span">點此登入</span>
+    </div>
   </div>
-</div>
-
-
 
   <div class="attraction-container">
     <div class="attraction-images">
@@ -75,7 +73,7 @@
           <div class="choose-date-box">
             <div class="choose-date-text">選擇日期：</div>
             <div class="choose-date-calender-container">
-              <input type="date" class="choose-date-calender">
+              <input type="date" class="choose-date-calender" id="choose-date">
             </div>
           </div>
         </div>
@@ -90,11 +88,13 @@
             <label for="downRadio" class="downRadioText">下半天</label>
           </div>
         </div>
-        <div class="price-container">
+        <div class="price-container" id="price-container">
           <div class="price-text">導覽費用：</div>
           <div class="price-value">新台幣 2000 元</div>
         </div>
-        <div class="date-button">開始預約行程</div>
+        <div class="date-booking">
+          <button class="date-button" id="book-button">開始預約行程</button>
+        </div>        
       </div>
     </div>
   </div>
@@ -105,13 +105,14 @@
       <div class="address-title">景點地址：</div>
       <div class="address"></div>
       <div class="transport-title">交通方式：</div>
-      <dic class="transport"></div>
+      <div class="transport"></div>
     </div>
   </div>
   <div class="copyrighttext">COPYRIGHT © 2021 台北一日遊</div>
   <script src="/static/attraction/scripts.js"></script>
 </body>
 </html>
+
 
 
 

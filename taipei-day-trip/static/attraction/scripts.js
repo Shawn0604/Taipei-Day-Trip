@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const transportElement = document.querySelector('.transport');
     const titleElement = document.querySelector('.title');
     const circleBar = document.querySelector('.circleBar');
-    const priceTextElement = document.querySelector('.price-value'); 
+    const priceTextElement = document.querySelector('.price-value');
     let currentImageIndex = 0;
     let data = null;
     let pricing = 2500;
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateAttractionDetails();
             setupImageSlider();
-            updatePricing(); 
+            updatePricing();
         } catch (error) {
             console.error('Error fetching attraction details:', error);
         }
@@ -91,20 +91,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'http://34.224.28.249:8000/';
     });
 
-
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === '上半天') {
-                pricing = 2000; 
+                pricing = 2000;
             } else {
-                pricing = 2500; 
+                pricing = 2500;
             }
             updatePricing();
         });
     });
 
     const updatePricing = () => {
-        priceTextElement.textContent = `新台幣${pricing}元`; 
+        priceTextElement.textContent = `新台幣${pricing}元`;
     };
 
     const loginForm = document.getElementById('login-form');
@@ -120,13 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
     successSignupMessage.style.display = 'none';
 
     loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // 阻止表单的默认提交行为
+        event.preventDefault(); // 阻止表單的默認提交行為
 
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        // console.log('Attempting to login with:', email, password);
-        
         try {
             const response = await fetch('/api/user/auth', {
                 method: 'PUT',
@@ -140,18 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            // console.log('Login response:', data); 
 
             if (response.ok) {
-                localStorage.setItem('token', data.token);  
-                showLogoutButton();  
-                document.querySelector('.success-login').style.display = 'block';  
-                document.querySelector('.fail-login').style.display = 'none';  
-                hideModal(); 
+                localStorage.setItem('token', data.token);
+                showLogoutButton();
+                document.querySelector('.success-login').style.display = 'block';
+                document.querySelector('.fail-login').style.display = 'none';
+                hideModal();
                 fetchCurrentUser();
             } else {
-                document.querySelector('.success-login').style.display = 'none';  
-                document.querySelector('.fail-login').style.display = 'block';  
+                document.querySelector('.success-login').style.display = 'none';
+                document.querySelector('.fail-login').style.display = 'block';
             }
         } catch (error) {
             console.error('登入時出現錯誤:', error);
@@ -181,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     registerForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
 
         const name = document.getElementById('register-name').value;
         const email = document.getElementById('register-email').value;
@@ -218,11 +214,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Registration error:', error.message);
         }
     });
+
     const token = localStorage.getItem('token');
 
     if (token) {
         showLogoutButton();
-        fetchCurrentUser(); 
+        fetchCurrentUser();
     } else {
         showLoginButton();
     }
@@ -245,8 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelector('.logout-button').addEventListener('click', function() {
-        localStorage.removeItem('token');  
-        showLoginButton();  
+        localStorage.removeItem('token');
+        showLoginButton();
     });
 
     const ClickActions = () => {
@@ -258,10 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const successLoginMessage = document.querySelector('.success-login');
         const failSignupMessage = document.querySelector('.fail-signup');
         const successSignupMessage = document.querySelector('.success-signup');
-    
+
         const handleButtonClick = (event) => {
             const target = event.target;
-    
+
             if (target.classList.contains('login-button')) {
                 popupmodal.style.display = 'block';
                 popupLogin.style.display = 'block';
@@ -284,16 +281,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideMessages();
             }
         };
-    
+
         const hideMessages = () => {
             failLoginMessage.style.display = 'none';
             successLoginMessage.style.display = 'none';
             failSignupMessage.style.display = 'none';
             successSignupMessage.style.display = 'none';
         };
-    
+
         document.addEventListener('click', handleButtonClick);
-    
+
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
                 popupmodal.style.display = 'none';
@@ -305,16 +302,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const bookingButton = document.getElementById('booking-button');
         bookingButton.addEventListener('click', () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            window.location.href = '/booking';  
-        } else {
-            popupmodal.style.display = 'block';  
-            popupLogin.style.display = 'block';
-            hideMessages();
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/booking';
+            } else {
+                popupmodal.style.display = 'block';
+                popupLogin.style.display = 'block';
+                hideMessages();
+            }
+        });
+        const attractionId = getAttractionIdFromUrl();
+        const bookButton = document.getElementById('book-button');
+        // const member_id = userData.data.id;
+        if (bookButton) {
+            bookButton.addEventListener('click', async function() {
+                // 抓取選擇的日期、時間和導覽費用
+                const chosenDate = document.getElementById('choose-date').value;
+                const chosenTime = document.querySelector('input[name="time"]:checked').value;
+                // const priceValue = pricing;
+                console.log(chosenDate)
+                console.log(chosenTime)
+                // console.log(priceValue)
+                // 建立要發送的資料物件
+                const bookingData = {
+                    attractionId,  // 替換為景點 ID
+                    date: chosenDate,
+                    time: chosenTime,
+                    price: pricing,
+                    // member_id
+                };
+
+                // 發送 POST 請求
+                try {
+                    const response = await fetch('/api/booking', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Booking request failed');
+                    }
+
+                    const result = await response.json();
+                    console.log('Booking created successfully:', result);
+
+                    // 清除錯誤訊息
+                    const errorMessages = document.querySelectorAll('.error-message');
+                    errorMessages.forEach(msg => msg.textContent = '');
+
+                    // 顯示成功訊息
+                    const successMessage = document.getElementById('success-message');
+                    if (successMessage) {
+                        successMessage.textContent = 'Booking created successfully!';
+                    }
+                } catch (error) {
+                    console.error('Error creating booking:', error);
+                    // 顯示錯誤訊息
+                    const errorMessage = document.getElementById('error-message');
+                    if (errorMessage) {
+                        errorMessage.textContent = 'Booking failed. Please try again.';
+                    }
+                }
+            });
         }
-    });
     };
+
     ClickActions();
     fetchAttractionDetails();
 });
