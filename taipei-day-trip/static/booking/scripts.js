@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const bookingButton = document.getElementById('booking-button');
-    
-    bookingButton.addEventListener('click', () => {
-        window.location.href = '/booking';
-    });
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const failLoginMessage = document.querySelector('.fail-login');
@@ -55,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('登入時出現錯誤:', error);
         }
     });
-
+    const userNameElement = document.getElementById('user-name');
     const fetchCurrentUser = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -74,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const userResponse = await response.json();
                 const user = userResponse.data;
+                userNameElement.textContent = user.name;
                 // console.log('User info:', user);
                 // 在这里处理用户信息，例如更新页面上的用户信息展示等操作
             } else {
@@ -214,6 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideMessages();
             });
         });
+
+
+        const bookingButton = document.getElementById('booking-button');
+        bookingButton.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = '/booking';  
+        } else {
+            popupmodal.style.display = 'block';  
+            popupLogin.style.display = 'block';
+            hideMessages();
+        }
+    });
     };
     
     ClickActions();

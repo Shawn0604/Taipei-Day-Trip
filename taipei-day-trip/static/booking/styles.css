@@ -64,20 +64,21 @@ body {
 .navigation-bar {
   width: 100%;
   /* max-width: 1920px; */
-  height: 320px;
+  /* height: 320px; */
   /* background-image: url('./images/welcome.png'); */
-  background-size: cover;
+  /* background-size: cover; */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  /* padding: 10px; */
   gap: 10px;
   box-sizing: border-box;
 }
 .navigtion-content {
   width: 100%;
   max-width: 1200px;
-  height: 169px;
+  /* height: 169px; */
+  margin-top: 30px;
   box-sizing: border-box;
 }
 .navigtion-content h1 {
@@ -89,20 +90,21 @@ body {
 .bigtext {
   height: 41px;
   font-family: "Noto Sans TC";
-  margin-bottom: 10px; 
+  margin-bottom:15px; 
   font-weight: 700;
-  font-size: 28px;
+  font-size: 19px;
   line-height: 24px;
-  color: #FFFFFF;
+  color: #666666;
   box-sizing: border-box;
 }
 .smalltext {
-  color: white;
+  color: #666666;
   max-width: 1200px;
   font-family: "Noto Sans TC";
-  font-weight: bold;
-  margin-bottom: 30px; 
+  /* font-weight: bold; */
+  margin-bottom: 40px; 
   line-height: 24px;
+  font-size: 16px;
   height: 20px;
   box-sizing: border-box; 
 }

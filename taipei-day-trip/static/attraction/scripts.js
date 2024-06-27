@@ -302,6 +302,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideMessages();
             });
         });
+
+        const bookingButton = document.getElementById('booking-button');
+        bookingButton.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = '/booking';  
+        } else {
+            popupmodal.style.display = 'block';  
+            popupLogin.style.display = 'block';
+            hideMessages();
+        }
+    });
     };
     ClickActions();
     fetchAttractionDetails();

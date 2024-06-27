@@ -326,9 +326,9 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingButton.addEventListener('click', () => {
         const token = localStorage.getItem('token');
         if (token) {
-            window.location.href = '/booking';  // 如果已登入，跳轉到預訂頁面
+            window.location.href = '/booking';  
         } else {
-            popupmodal.style.display = 'block';  // 如果未登入，顯示彈出視窗
+            popupmodal.style.display = 'block';  
             popupLogin.style.display = 'block';
             hideMessages();
         }
