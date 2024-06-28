@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const successLoginMessage = document.querySelector('.success-login');
     const failSignupMessage = document.querySelector('.fail-signup');
     const successSignupMessage = document.querySelector('.success-signup');
+    let globalUserId = null; 
+    let globalUsername = null; 
 
     // 隐藏所有提示信息
     failLoginMessage.style.display = 'none';
@@ -18,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        // console.log('Attempting to login with:', email, password);
-        
         try {
             const response = await fetch('/api/user/auth', {
                 method: 'PUT',
@@ -33,15 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            // console.log('Login response:', data); 
-
             if (response.ok) {
                 localStorage.setItem('token', data.token);  
+                localStorage.setItem('member_id', data.member_id); // Save member_id
+                globalUserId = data.member_id; // Set globalUserId
                 showLogoutButton();  
                 document.querySelector('.success-login').style.display = 'block';  
                 document.querySelector('.fail-login').style.display = 'none'; 
                 hideModal();
                 fetchCurrentUser();
+                fetchBookings(); // 登录成功后获取预订信息
             } else {
                 document.querySelector('.success-login').style.display = 'none';  
                 document.querySelector('.fail-login').style.display = 'block';  
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('登入時出現錯誤:', error);
         }
     });
-    const userNameElement = document.getElementById('user-name');
+
     const fetchCurrentUser = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -67,11 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     
             if (response.ok) {
-                const userResponse = await response.json();
-                const user = userResponse.data;
-                userNameElement.textContent = user.name;
-                // console.log('User info:', user);
-                // 在这里处理用户信息，例如更新页面上的用户信息展示等操作
+                const userData = await response.json();
+                console.log('Response data:', userData);
+                globalUserId = userData.data.id;
+                globalUsername = userData.data.name;
+                console.log(globalUserId,globalUsername)
             } else {
                 if (response.status === 401) {
                     console.error('未授权需要重新登录');
@@ -85,8 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('获取用户信息时出错:', error);
         }
     };
-    
-    
 
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault(); 
@@ -127,10 +126,89 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const fetchBookings = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('Token 不存在');
+            return;
+        }
+
+        if (!globalUserId) {
+            console.error('Member ID 不存在');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/booking?member_id=${globalUserId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const bookings = data.data;
+                updateBookingInfo(bookings);
+            } else {
+                console.error('获取预订信息失败，HTTP 状态码:', response.status);
+            }
+        } catch (error) {
+            console.error('获取预订信息时出错:', error);
+        }
+    };
+
+    const updateBookingInfo = async (bookings) => {
+        const bigText = document.querySelector('.bigtext');
+        const smallText = document.querySelector('.smalltext');
+    
+        if (bookings.length > 0) {
+            bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
+            smallText.style.display = 'none';
+    
+            for (const booking of bookings) {
+                // Fetch attraction details
+                const attractionDetails = await fetchAttractionDetails(booking.attractionId);
+                const bookingInfo = document.createElement('div');
+                bookingInfo.className = 'booking-info';
+                bookingInfo.innerHTML = `
+                    <div>景點名稱: ${attractionDetails.name}</div>
+                    <div>日期: ${booking.date}</div>
+                    <div>時間: ${booking.time}</div>
+                    <div>費用: ${booking.price}</div>
+                    <div>地址: ${attractionDetails.address}</div>
+                    <div>
+                        <img src="${attractionDetails.images[0]}" alt="${attractionDetails.name}" style="width: 100px; height: auto;">
+                    </div>
+                `;
+                bigText.appendChild(bookingInfo);
+            }
+        } else {
+            smallText.style.display = 'block';
+        }
+    };
+    
+    const fetchAttractionDetails = async (attractionId) => {
+        try {
+            const response = await fetch(`/api/attraction/${attractionId}`);
+            if (response.ok) {
+                const data = await response.json();
+                return data.data;
+            } else {
+                console.error('获取景点信息失败，HTTP 状态码:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('获取景点信息时出错:', error);
+            return null;
+        }
+    };
+    
+
     const token = localStorage.getItem('token');
     if (token) {
         showLogoutButton();
-        fetchCurrentUser(); 
+        fetchCurrentUser().then(() => fetchBookings()); // 确保 fetchCurrentUser 完成后再调用 fetchBookings
     } else {
         showLoginButton();
     }
@@ -154,6 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.logout-button').addEventListener('click', function() {
         localStorage.removeItem('token');  
+        localStorage.removeItem('member_id');
+        globalUserId = null; // Reset globalUserId
         showLoginButton();  
     });
 
@@ -162,10 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const popupLogin = document.getElementById('popup-login');
         const popupSignup = document.getElementById('popup-signup');
         const closeButtons = document.querySelectorAll('.popup-close');
-        const failLoginMessage = document.querySelector('.fail-login');
-        const successLoginMessage = document.querySelector('.success-login');
-        const failSignupMessage = document.querySelector('.fail-signup');
-        const successSignupMessage = document.querySelector('.success-signup');
     
         const handleButtonClick = (event) => {
             const target = event.target;
@@ -211,22 +287,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-
         const bookingButton = document.getElementById('booking-button');
         bookingButton.addEventListener('click', () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            window.location.href = '/booking';  
-        } else {
-            popupmodal.style.display = 'block';  
-            popupLogin.style.display = 'block';
-            hideMessages();
-        }
-    });
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/booking';  
+            } else {
+                popupmodal.style.display = 'block';  
+                popupLogin.style.display = 'block';
+                hideMessages();
+            }
+        });
     };
     
     ClickActions();
 });
+
+
 
 
 
