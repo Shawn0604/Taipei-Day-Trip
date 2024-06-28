@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS booking (
     FOREIGN KEY (member_id) REFERENCES member(id)
 )
 """)
-# member_id varchar(255) NOT NULL
+
 
 
 # 插入資料

@@ -306,12 +306,11 @@ class BookingDataPost(BaseModel):
     member_id: int
 
 @app.post("/api/booking")
-async def create_booking(bookings: BookingDataPost, current_user: dict = Depends(get_user_info)):
+async def create_booking(bookings: BookingDataPost):
     con, cursor = connectMySQLserver()
     if cursor is not None:
         try:
-            # cursor.execute("DELETE FROM booking WHERE userId = %s", (current_user["id"],))
-
+            cursor.execute("DELETE FROM booking WHERE member_id = %s", (bookings.member_id,))
             cursor.execute("INSERT INTO booking (attractionId, date, time, price, member_id) VALUES (%s, %s, %s, %s, %s)",
             (bookings.attractionId, bookings.date, bookings.time, bookings.price, bookings.member_id))
             con.commit()
@@ -324,6 +323,61 @@ async def create_booking(bookings: BookingDataPost, current_user: dict = Depends
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+    
+class BookingDataResponse(BaseModel):
+    attractionId: int
+    date: str
+    time: str
+    price: int
+    member_id: int
+
+
+@app.get("/api/booking")
+async def get_booking(member_id: int):
+    con, cursor = connectMySQLserver()
+    if cursor is not None:
+        try:
+            cursor.execute("SELECT attractionId, date, time, price FROM booking WHERE member_id = %s", (member_id,))
+            rows = cursor.fetchall()
+            bookings = []
+            for row in rows:
+                booking = {
+                    "attractionId": row['attractionId'],
+                    "date": row['date'],
+                    "time": row['time'],
+                    "price": row['price']
+                }
+                bookings.append(booking)
+            return {"data": bookings}
+        except mysql.connector.Error as err:
+            print("Database Error:", err)
+            return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+        finally:
+            cursor.close()
+            con.close()
+    else:
+        return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+    
+
+@app.delete("/api/booking/{booking_id}")
+async def delete_booking(booking_id: int):
+    con, cursor = connectMySQLserver()
+    if cursor is not None:
+        try:
+            cursor.execute("DELETE FROM booking WHERE id = %s", (booking_id,))
+            con.commit()
+            return {"message": "Booking deleted successfully"}
+        except mysql.connector.Error as err:
+            print("Database Error:", err)
+            return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+        finally:
+            cursor.close()
+            con.close()
+    else:
+        return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
+
+
 
     
 def close_connection_pool():
