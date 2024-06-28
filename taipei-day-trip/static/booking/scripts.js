@@ -161,32 +161,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateBookingInfo = async (bookings) => {
         const bigText = document.querySelector('.bigtext');
         const smallText = document.querySelector('.smalltext');
-    
+      
         if (bookings.length > 0) {
-            bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
-            smallText.style.display = 'none';
-    
-            for (const booking of bookings) {
-                // Fetch attraction details
-                const attractionDetails = await fetchAttractionDetails(booking.attractionId);
-                const bookingInfo = document.createElement('div');
-                bookingInfo.className = 'booking-info';
-                bookingInfo.innerHTML = `
-                    <div>景點名稱: ${attractionDetails.name}</div>
-                    <div>日期: ${booking.date}</div>
-                    <div>時間: ${booking.time}</div>
-                    <div>費用: ${booking.price}</div>
-                    <div>地址: ${attractionDetails.address}</div>
-                    <div>
-                        <img src="${attractionDetails.images[0]}" alt="${attractionDetails.name}" style="width: 100px; height: auto;">
-                    </div>
-                `;
-                bigText.appendChild(bookingInfo);
-            }
+          bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
+          smallText.style.display = 'none';
+      
+          for (const booking of bookings) {
+            // Fetch attraction details
+            const attractionDetails = await fetchAttractionDetails(booking.attractionId);
+      
+            // Fill in the details
+            document.getElementById('attraction-name').textContent = `台北一日遊: ${attractionDetails.name}`;
+            document.getElementById('booking-date').innerHTML = `<span class="bold-label"></span> ${booking.date}`;
+            document.getElementById('booking-time').innerHTML = `<span class="bold-label"></span> ${booking.time}`;
+            document.getElementById('booking-price').innerHTML = `<span class="bold-label"></span> ${booking.price}`;
+            document.getElementById('attraction-address').textContent = ` ${attractionDetails.address}`;
+      
+            // Display the attraction image
+            const attractionImage = document.getElementById('attraction-image');
+            attractionImage.src = attractionDetails.images[0]; // Assuming images is an array
+      
+            // Optionally, you can create bookingInfo element and append to bigText
+          }
         } else {
-            smallText.style.display = 'block';
+          smallText.style.display = 'block';
         }
-    };
+      };
+      
     
     const fetchAttractionDetails = async (attractionId) => {
         try {
