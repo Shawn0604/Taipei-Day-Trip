@@ -303,6 +303,7 @@ class BookingDataPost(BaseModel):
     date: str
     time: str
     price: int
+    member_id: int
 
 @app.post("/api/booking")
 async def create_booking(bookings: BookingDataPost, current_user: dict = Depends(get_user_info)):
@@ -311,8 +312,8 @@ async def create_booking(bookings: BookingDataPost, current_user: dict = Depends
         try:
             # cursor.execute("DELETE FROM booking WHERE userId = %s", (current_user["id"],))
 
-            cursor.execute("INSERT INTO booking (attractionId, date, time, price) VALUES (%s, %s, %s, %s, %s)",
-            (bookings.attractionId, bookings.date, bookings.time, bookings.price))
+            cursor.execute("INSERT INTO booking (attractionId, date, time, price, member_id) VALUES (%s, %s, %s, %s, %s)",
+            (bookings.attractionId, bookings.date, bookings.time, bookings.price, bookings.member_id))
             con.commit()
             return {"ok": "true"}
         except mysql.connector.Error as err:

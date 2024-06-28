@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentImageIndex = 0;
     let data = null;
     let pricing = 2500;
+    let globalUserId = null; 
 
     const fetchAttractionDetails = async () => {
         try {
@@ -167,7 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                const user = await response.json();
+                
+                const userData = await response.json();
+                console.log('Response data:', userData);
+                globalUserId = userData.data.id;
+                // const userId = userData.data.id; // 获取data中的id
+                // console.log('User ID:', userId);
             } else {
                 console.error('獲取用戶訊息失敗');
             }
@@ -311,64 +317,88 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideMessages();
             }
         });
+        
         const attractionId = getAttractionIdFromUrl();
-        const bookButton = document.getElementById('book-button');
-        // const member_id = userData.data.id;
-        if (bookButton) {
-            bookButton.addEventListener('click', async function() {
-                // 抓取選擇的日期、時間和導覽費用
-                const chosenDate = document.getElementById('choose-date').value;
-                const chosenTime = document.querySelector('input[name="time"]:checked').value;
-                // const priceValue = pricing;
-                console.log(chosenDate)
-                console.log(chosenTime)
-                // console.log(priceValue)
-                // 建立要發送的資料物件
-                const bookingData = {
-                    attractionId,  // 替換為景點 ID
-                    date: chosenDate,
-                    time: chosenTime,
-                    price: pricing,
-                    // member_id
-                };
+const bookButton = document.getElementById('book-button');
 
-                // 發送 POST 請求
-                try {
-                    const response = await fetch('/api/booking', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(bookingData)
-                    });
+if (bookButton) {
+    bookButton.addEventListener('click', async function() {
+        // 抓取選擇的日期、時間和導覽費用
+        const chosenDate = document.getElementById('choose-date').value;
+        const chosenTime = document.querySelector('input[name="time"]:checked').value;
 
-                    if (!response.ok) {
-                        throw new Error('Booking request failed');
-                    }
+        try {
+            // 获取当前用户信息
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // 处理未登录的情况，例如弹出登录框或其他处理逻辑
+                return;
+            }
 
-                    const result = await response.json();
-                    console.log('Booking created successfully:', result);
-
-                    // 清除錯誤訊息
-                    const errorMessages = document.querySelectorAll('.error-message');
-                    errorMessages.forEach(msg => msg.textContent = '');
-
-                    // 顯示成功訊息
-                    const successMessage = document.getElementById('success-message');
-                    if (successMessage) {
-                        successMessage.textContent = 'Booking created successfully!';
-                    }
-                } catch (error) {
-                    console.error('Error creating booking:', error);
-                    // 顯示錯誤訊息
-                    const errorMessage = document.getElementById('error-message');
-                    if (errorMessage) {
-                        errorMessage.textContent = 'Booking failed. Please try again.';
-                    }
+            const responseUser = await fetch('/api/user/auth', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
             });
+
+            if (!responseUser.ok) {
+                throw new Error('Failed to fetch user info');
+            }
+
+            // 获取全局用户ID
+            console.log('globalUserId', globalUserId);
+
+            // 建立要發送的資料物件
+            const bookingData = {
+                attractionId,
+                date: chosenDate,
+                time: chosenTime,
+                price: pricing,
+                member_id: globalUserId
+            };
+
+            // 發送 POST 請求
+            const response = await fetch('/api/booking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Booking request failed');
+            }
+
+            const result = await response.json();
+            console.log('Booking created successfully:', result);
+
+            // 清除錯誤訊息
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.textContent = '');
+
+            // 顯示成功訊息
+            const successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.textContent = 'Booking created successfully!';
+            }
+
+            // 跳轉到 /booking 頁面
+            window.location.href = '/booking';
+
+        } catch (error) {
+            console.error('Error creating booking:', error);
+            // 顯示錯誤訊息
+            const errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                errorMessage.textContent = 'Booking failed. Please try again.';
+            }
         }
+    });
+}
+
     };
 
     ClickActions();
