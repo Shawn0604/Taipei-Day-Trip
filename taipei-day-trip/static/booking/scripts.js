@@ -191,10 +191,13 @@ window.onload = async function() {
         const smallText = document.querySelector('.smalltext');
         const navigationContent = document.querySelector('.navigation-content');
     
+        // Always display bigText
+        bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
+    
         if (bookings.length > 0) {
-            bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
-            smallText.style.display = 'none';
+            // If bookings exist, display navigation content
             navigationContent.style.display = 'block';
+            smallText.style.display = 'none'; // Hide smallText
     
             for (const booking of bookings) {
                 // Fetch attraction details
@@ -215,14 +218,15 @@ window.onload = async function() {
                 // Optionally, you can create bookingInfo element and append to bigText
             }
         } else {
-
-            smallText.style.display = 'block';
+            // If no bookings, hide navigation content and display smallText
             navigationContent.style.display = 'none';
+            smallText.style.display = 'block'; // Show smallText
         }
     };
     
     
-
+    
+    
     const fetchAttractionDetails = async (attractionId) => {
         try {
             const response = await fetch(`/api/attraction/${attractionId}`);
