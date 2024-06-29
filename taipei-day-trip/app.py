@@ -359,22 +359,29 @@ async def get_booking(member_id: int):
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
     
 
-@app.delete("/api/booking/{booking_id}")
-async def delete_booking(booking_id: int):
+
+
+@app.delete("/api/booking/")
+async def delete_booking(member_id: int):
     con, cursor = connectMySQLserver()
     if cursor is not None:
         try:
-            cursor.execute("DELETE FROM booking WHERE id = %s", (booking_id,))
+            cursor.execute("DELETE FROM booking WHERE member_id = %s", (member_id,))
             con.commit()
-            return {"message": "Booking deleted successfully"}
+            if cursor.rowcount > 0:
+                return {"message": f"成功刪除 member_id 為 {member_id} 的所有預訂資料"}
+            else:
+                raise HTTPException(status_code=404, detail=f"找不到 member_id 為 {member_id} 的預訂資料")
         except mysql.connector.Error as err:
             print("Database Error:", err)
-            return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+            raise HTTPException(status_code=500, detail="伺服器內部錯誤")
         finally:
             cursor.close()
             con.close()
     else:
-        return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+        raise HTTPException(status_code=500, detail="伺服器內部錯誤")
+
+
 
 
 

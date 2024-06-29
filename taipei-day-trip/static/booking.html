@@ -62,7 +62,7 @@
             <img id="attraction-image">
         </div>
         <div class="booking-container">
-          <div id="attraction-name"></div>
+          <div class="attraction-name" id="attraction-name"></div>
           <div class="booking-details">
             <div class="date">
               <div class="booking-date-title">日期:</div><div id="booking-date"></div>
@@ -76,39 +76,70 @@
             <div class="address">
               <div class="attraction-address-title">地址:</div><div id="attraction-address"></div>
             </div>
-            
+            <span class="delete-button"></span>
           </div>
         </div>
       </div>
       <div class="separator-line"></div>
       <div class="contact-container">
-        <div class="">
-          <div class="">您的聯絡資訊</div>
-          <div class="">聯絡姓名：</div>
-          <div class="">聯絡信箱：</div>
-          <div class="">手機號碼：</div>
+        <div class="contact-title">您的聯絡資訊</div>
+        <div class="name-container">
+          <div class="contact-name">聯絡姓名：</div>
+          <div class="name-input">
+            <input type="text" name="name" class="nameinput">
+          </div>
         </div>
-        <div class="">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+        <div class="email-container">
+          <div class="contact-email">聯絡信箱：</div>
+          <div class="email-input">
+            <input type="text" name="email" class="emailinput">
+          </div>
+        </div>
+        <div class="phone-container">
+          <div class="contact-phone">手機號碼：</div>
+          <div class="phone-input">
+            <input type="text" name="phone" class="phoneinput">
+          </div>
+        </div>
+        
+        <div class="contact-text">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
         </div>
       </div>
       <div class="separator-line"></div>
       <div class="card-container">
-        <div class="">
-          <div class="">卡片號碼：</div>
-          <div class="">過期時間：</div>
-          <div class="">驗證密碼：</div>
+        <div class="card-title">信用卡付款資訊</div>
+        <div class="number-container">
+          <div class="card-number">卡片號碼：</div>
+          <div class="number-input">
+            <input type="text" name="number" class="numberinput">
+          </div>
+        </div>
+        <div class="time-container">
+          <div class="card-time">過期時間：</div>
+          <div class="time-input">
+            <input type="text" name="time" class="timeinput">
+          </div>
+        </div>
+        <div class="password-container">
+          <div class="card-password">驗證密碼：</div>
+          <div class="password-input">
+            <input type="text" name="password" class="passwordinput">
+          </div>
+        </div>
+      </div>
+      <div class="separator-line"></div>
+      <div class="sibmit-container">
+        <div class="total-price-container">
+          <div class="total-price" id="total-price"></div>
+        </div>
+        <div class="submit-button-container">
+          <div class="submit-button">確認訂購並付款</div>
         </div>
       </div>
     </div>
   </div>
-
- 
-
-
-
   <div class="loader"></div>
   <div class="copyrighttext">COPYRIGHT © 2021 台北一日遊</div>
-
   <script src="/static/booking/scripts.js"></script>
 </body>
 </html>
