@@ -359,8 +359,6 @@ async def get_booking(member_id: int):
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
     
 
-
-
 @app.delete("/api/booking/")
 async def delete_booking(member_id: int):
     con, cursor = connectMySQLserver()

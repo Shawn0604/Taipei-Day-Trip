@@ -470,7 +470,7 @@ body {
   margin: 10px 0;
   position: relative;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .booking-image img {
@@ -495,6 +495,7 @@ body {
   /* position: absolute; */
   margin-left: 40px; 
   top: 0; 
+  flex: 1;
 }
 
 
@@ -519,6 +520,12 @@ body {
   width: 1200px;
   border-top: 2px solid rgba(232, 232, 232, 1);
   margin: 0 auto; /* 將分隔線居中 */
+}
+.separator-line-2 {
+  margin-top:40px;
+  width: 1200px;
+  border-top: 2px solid rgba(232, 232, 232, 1);
+  /* margin: 0 auto; 將分隔線居中 */
 }
 
 .contact-title,.card-title{
