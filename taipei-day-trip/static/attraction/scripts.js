@@ -175,7 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // const userId = userData.data.id; // 获取data中的id
                 // console.log('User ID:', userId);
             } else {
-                console.error('獲取用戶訊息失敗');
+                window.location.href = '/';
+                return false;
+                // console.error('獲取用戶訊息失敗');
             }
         } catch (error) {
             console.error('Error fetching user info:', error);
@@ -331,27 +333,32 @@ if (bookButton) {
             // 获取当前用户信息
             const token = localStorage.getItem('token');
             if (!token) {
-                // 处理未登录的情况，例如弹出登录框或其他处理逻辑
+                // 顯示登入框
+                const popupmodal = document.getElementById('modal');
+                const popupLogin = document.getElementById('popup-login');
+                popupmodal.style.display = 'block';
+                popupLogin.style.display = 'block';
+                hideMessages();
                 return;
             }
 
-            const responseUser = await fetch('/api/user/auth', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            // const responseUser = await fetch('/api/user/auth', {
+            //     method: 'GET',
+            //     headers: {
+            //         'Authorization': `Bearer ${token}`
+            //     }
+            // });
 
-            if (!responseUser.ok) {
-                throw new Error('Failed to fetch user info');
-            }
+            // if (!responseUser.ok) {
+            //     throw new Error('Failed to fetch user info');
+            // }
 
             // 获取全局用户ID
             console.log('globalUserId', globalUserId);
 
             // 建立要發送的資料物件
             const bookingData = {
-                attractionId,
+                attractionId: getAttractionIdFromUrl(),
                 date: chosenDate,
                 time: chosenTime,
                 price: pricing,

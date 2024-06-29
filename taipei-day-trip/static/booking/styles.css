@@ -72,40 +72,48 @@ body {
   /* padding: 10px; */
   gap: 10px;
   box-sizing: border-box;
+  flex-direction: column;
+  text-align: left;
 }
-.navigtion-content {
+.navigation-content {
   width: 100%;
   max-width: 1200px;
   /* height: 1000px; */
   margin-top: 30px;
   box-sizing: border-box;
 }
-.navigtion-content h1 {
+.navigation-content h1 {
   font-size: 28px;
   color: white;
   font-family: "Noto Sans TC";
   box-sizing: border-box;
 }
 .bigtext {
-  height: 41px;
   font-family: "Noto Sans TC";
   margin-bottom:15px; 
   font-weight: 700;
   font-size: 19px;
   line-height: 24px;
   color: #666666;
+  /* box-sizing: border-box; */
+  margin-top: 40px;
+  margin-bottom: 20px;
+  text-align: left;
   box-sizing: border-box;
+  width: 100%;
 }
 .smalltext {
   color: #666666;
   max-width: 1200px;
   font-family: "Noto Sans TC";
   /* font-weight: bold; */
-  margin-bottom: 40px; 
+  /* margin-bottom: 40px;  */
   line-height: 24px;
   font-size: 16px;
   height: 20px;
   box-sizing: border-box; 
+  text-align: left;
+  width: 100%;
 }
 .search {
   display: flex;

@@ -53,48 +53,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const fetchCurrentUser = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('Token 不存在');
-                return;
-            }
-
-            const response = await fetch('/api/user/auth', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const userData = await response.json();
-                console.log('Response data:', userData);
-                globalUserId = userData.data.id;
-                globalUsername = userData.data.name;
-                globalUseremail = userData.data.email;
-
-                // 設置輸入框的值
-                document.querySelector('.nameinput').value = globalUsername;
-                document.querySelector('.emailinput').value = globalUseremail;
-
-                console.log(globalUserId);
-                console.log(globalUsername);
-                console.log(globalUseremail);
-            } else {
-                if (response.status === 401) {
-                    console.error('未授權，需要重新登錄');
-                } else if (response.status === 404) {
-                    console.error('用戶未找到');
-                } else {
-                    console.error('獲取用戶信息失敗，HTTP 狀態碼:', response.status);
-                }
-            }
-        } catch (error) {
-            console.error('獲取用戶信息時出錯:', error);
+    // 檢查用戶是否已經登入，並同時獲取用戶信息
+async function fetchCurrentUser() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('Token 不存在');
+            window.location.href = '/'; // 導向首頁
+            return false;
         }
-    };
+
+        const response = await fetch('/api/user/auth', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                console.error('未授權，需要重新登錄');
+            } else if (response.status === 404) {
+                console.error('用戶未找到');
+            } else {
+                console.error('獲取用戶信息失敗，HTTP 狀態碼:', response.status);
+            }
+            window.location.href = '/'; // 導向首頁
+            return false;
+        }
+
+        const userData = await response.json();
+        console.log('Response data:', userData);
+        globalUserId = userData.data.id;
+        globalUsername = userData.data.name;
+        globalUseremail = userData.data.email;
+
+        // 設置輸入框的值
+        document.querySelector('.nameinput').value = globalUsername;
+        document.querySelector('.emailinput').value = globalUseremail;
+
+        console.log(globalUserId);
+        console.log(globalUsername);
+        console.log(globalUseremail);
+
+        // 如果驗證成功，繼續載入 booking.html
+        return true;
+    } catch (error) {
+        console.error('獲取用戶信息時出錯:', error);
+        // 處理錯誤情況，例如顯示錯誤信息
+        window.location.href = '/'; // 導向首頁
+        return false;
+    }
+}
+
+window.onload = async function() {
+    const isAuthenticated = await fetchCurrentUser();
+    if (!isAuthenticated) {
+        return;
+    }
+};
+
 
 
     registerForm.addEventListener('submit', async (event) => {
@@ -171,15 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateBookingInfo = async (bookings) => {
         const bigText = document.querySelector('.bigtext');
         const smallText = document.querySelector('.smalltext');
-
+        const navigationContent = document.querySelector('.navigation-content');
+    
         if (bookings.length > 0) {
             bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
             smallText.style.display = 'none';
-
+            navigationContent.style.display = 'block';
+    
             for (const booking of bookings) {
                 // Fetch attraction details
                 const attractionDetails = await fetchAttractionDetails(booking.attractionId);
-
+    
                 // Fill in the details
                 document.getElementById('attraction-name').textContent = `台北一日遊: ${attractionDetails.name}`;
                 document.getElementById('booking-date').innerHTML = ` ${booking.date}`;
@@ -187,17 +207,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('booking-price').innerHTML = `${booking.price}`;
                 document.getElementById('total-price').innerHTML = `總價：新台幣${booking.price}元`;
                 document.getElementById('attraction-address').textContent = ` ${attractionDetails.address}`;
-
+    
                 // Display the attraction image
                 const attractionImage = document.getElementById('attraction-image');
                 attractionImage.src = attractionDetails.images[0]; // Assuming images is an array
-
+    
                 // Optionally, you can create bookingInfo element and append to bigText
             }
         } else {
+
             smallText.style.display = 'block';
+            navigationContent.style.display = 'none';
         }
     };
+    
+    
 
     const fetchAttractionDetails = async (attractionId) => {
         try {
