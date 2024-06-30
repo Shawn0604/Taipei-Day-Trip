@@ -331,24 +331,45 @@ class BookingDataResponse(BaseModel):
     price: int
     member_id: int
 
-
+import ast
 @app.get("/api/booking")
-async def get_booking(member_id: int):
+async def get_booking(user_info: dict = Depends(get_user_info)):
+    member_id = user_info.get("id")
+    if not member_id:
+        raise HTTPException(status_code=401, detail="Invalid user ID")
+    
     con, cursor = connectMySQLserver()
     if cursor is not None:
         try:
             cursor.execute("SELECT attractionId, date, time, price FROM booking WHERE member_id = %s", (member_id,))
-            rows = cursor.fetchall()
-            bookings = []
-            for row in rows:
+            row = cursor.fetchone()
+            if not row:
+                return JSONResponse(status_code=404, content={"error": True, "message": "找不到任何預訂"})
+            
+            attractionId = row['attractionId']
+            cursor.execute("SELECT id, name, address, images FROM attractions WHERE id = %s", (attractionId,))
+            attraction_data = cursor.fetchone()
+            if attraction_data:
                 booking = {
-                    "attractionId": row['attractionId'],
+                    "attraction": {
+                        "id": attraction_data["id"],
+                        "name": attraction_data["name"],
+                        "address": attraction_data["address"],
+                        "image": ast.literal_eval(attraction_data["images"])[0]
+                    },
                     "date": row['date'],
                     "time": row['time'],
                     "price": row['price']
                 }
-                bookings.append(booking)
-            return {"data": bookings}
+            else:
+                booking = {
+                    "attraction": None,
+                    "date": row['date'],
+                    "time": row['time'],
+                    "price": row['price']
+                }
+
+            return {"data": booking}
         except mysql.connector.Error as err:
             print("Database Error:", err)
             return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
@@ -357,28 +378,31 @@ async def get_booking(member_id: int):
             con.close()
     else:
         return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
-    
 
-@app.delete("/api/booking/")
-async def delete_booking(member_id: int):
+
+@app.delete("/api/booking")
+async def delete_booking(member_info: dict):
+    member_id = member_info.get("member_id")
+    if not member_id:
+        raise HTTPException(status_code=400, detail="缺少會員ID")
+
     con, cursor = connectMySQLserver()
     if cursor is not None:
         try:
             cursor.execute("DELETE FROM booking WHERE member_id = %s", (member_id,))
             con.commit()
             if cursor.rowcount > 0:
-                return {"message": f"成功刪除 member_id 為 {member_id} 的所有預訂資料"}
+                return { "ok": "true"}
             else:
-                raise HTTPException(status_code=404, detail=f"找不到 member_id 為 {member_id} 的預訂資料")
+                raise HTTPException(status_code=404, detail=f"找不到 member_id 为 {member_id} 的预订数据")
         except mysql.connector.Error as err:
             print("Database Error:", err)
-            raise HTTPException(status_code=500, detail="伺服器內部錯誤")
+            raise HTTPException(status_code=500, detail="服务器内部错误")
         finally:
             cursor.close()
             con.close()
     else:
-        raise HTTPException(status_code=500, detail="伺服器內部錯誤")
-
+        raise HTTPException(status_code=500, detail="服务器内部错误")
 
 
 

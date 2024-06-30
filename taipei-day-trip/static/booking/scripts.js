@@ -98,6 +98,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    const checkAuthentication = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('Token 不存在');
+            redirectToHomePage();
+            return false;
+        }
+        return true;
+    };
+    
+
     const fetchCurrentUser = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -148,92 +159,99 @@ document.addEventListener('DOMContentLoaded', async () => {
             return false;
         }
     };
-
+    
     const fetchBookings = async () => {
         const token = localStorage.getItem('token');
-        if (!token || !globalUserId) {
-            console.error('Token 或 Member ID 不存在');
+        if (!token) {
+            console.error('Token 不存在');
             return;
         }
-
+    
         try {
-            const response = await fetch(`/api/booking?member_id=${globalUserId}`, {
+            const response = await fetch(`/api/booking`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
-                const bookings = data.data;
-                updateBookingInfo(bookings);
+                const booking = data.data; // Use data.data to access the booking object directly
+                if (booking) { // 確保有有效的 booking
+                    updateBookingInfo(booking); // Pass the booking object to updateBookingInfo
+                } else {
+                    console.error('獲取到的預訂信息無效:', data);
+                }
             } else {
-                console.error('获取预订信息失败，HTTP 状态码:', response.status);
+                const bigText = document.querySelector('.bigtext');
+                bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
+                const smallText = document.querySelector('.smalltext');
+                const navigationContent = document.querySelector('.navigation-content');
+                navigationContent.style.display = 'none';
+                smallText.style.display = 'block'; 
+                console.error('獲取預訂信息失敗，HTTP 狀態碼:', response.status);
             }
         } catch (error) {
-            console.error('获取预订信息时出错:', error);
+            console.error('獲取預訂信息時出錯:', error);
         }
     };
-
-    const updateBookingInfo = async (bookings) => {
+    
+    
+    const updateBookingInfo = (booking) => {
         const bigText = document.querySelector('.bigtext');
         const smallText = document.querySelector('.smalltext');
         const navigationContent = document.querySelector('.navigation-content');
-
+    
         // Always display bigText
         bigText.innerHTML = `您好，<span id="user-name">${globalUsername}</span>，待預定的行程如下：`;
-
-        if (bookings.length > 0) {
-            // If bookings exist, display navigation content
+    
+        if (booking.attraction !== null) {
+            // If booking exists, display navigation content
             navigationContent.style.display = 'block';
             smallText.style.display = 'none'; // Hide smallText
-
-            for (const booking of bookings) {
-                // Fetch attraction details
-                const attractionDetails = await fetchAttractionDetails(booking.attractionId);
-
-                // Fill in the details
-                document.getElementById('attraction-name-detail').textContent = ` ${attractionDetails.name}`;
-                document.getElementById('booking-date').innerHTML = `  ${booking.date}`;
-                document.getElementById('booking-time').innerHTML = ` ${booking.time}`;
-                document.getElementById('booking-price').innerHTML = ` ${booking.price}`;
-                document.getElementById('total-price').innerHTML = `總價：新台幣${booking.price}元`;
-                document.getElementById('attraction-address').textContent = ` ${attractionDetails.address}`;
-
-                // Display the attraction image
-                const attractionImage = document.getElementById('attraction-image');
-                attractionImage.src = attractionDetails.images[0]; // Assuming images is an array
-
-                // Optionally, you can create bookingInfo element and append to bigText
-            }
+    
+            const attraction = booking.attraction;
+    
+            // Fill in the details
+            document.getElementById('attraction-name-detail').textContent = attraction.name;
+            document.getElementById('booking-date').innerHTML = booking.date;
+            document.getElementById('booking-time').innerHTML = booking.time;
+            document.getElementById('booking-price').innerHTML = booking.price;
+            document.getElementById('total-price').innerHTML = `總價：新台幣${booking.price}元`;
+            document.getElementById('attraction-address').textContent = attraction.address;
+    
+            // Display the attraction image
+            const attractionImage = document.getElementById('attraction-image');
+            attractionImage.src = attraction.image; // Assuming image is a string URL
         } else {
-            // If no bookings, hide navigation content and display smallText
+            // If no booking, hide navigation content and display smallText
             navigationContent.style.display = 'none';
             smallText.style.display = 'block'; // Show smallText
         }
     };
-
-    const fetchAttractionDetails = async (attractionId) => {
-        try {
-            const response = await fetch(`/api/attraction/${attractionId}`);
-            if (response.ok) {
-                const data = await response.json();
-                return data.data;
-            } else {
-                console.error('获取景点信息失败，HTTP 状态码:', response.status);
-                return null;
-            }
-        } catch (error) {
-            console.error('获取景点信息时出错:', error);
-            return null;
-        }
-    };
+    
+    
 
     const showLogoutButton = () => {
         document.querySelector('.login-button').style.display = 'none';
         document.querySelector('.logout-button').style.display = 'block';
     };
+
+    function showLoginButton() {
+        document.querySelector('.login-button').style.display = 'block';
+        document.querySelector('.logout-button').style.display = 'none';
+    }
+
+    document.querySelector('.logout-button').addEventListener('click', function() {
+        localStorage.removeItem('token');  
+        redirectToHomePage();  
+    });
+    
+    const redirectToHomePage = () => {
+        window.location.href = '/'; // 導向首頁
+    };
+    
 
     const hideModal = () => {
         const popupmodal = document.getElementById('modal');
@@ -285,7 +303,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    const ClickActions = () => {
+
+    const handleDeleteBooking = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('Token 不存在');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/booking`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ member_id: globalUserId }) // 發送會員ID到後端
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Delete response:', data);
+
+            // 更新本地預訂信息而不是再次調用 fetchBookings()
+            updateBookingInfo({ attraction: null });
+
+        } else {
+            console.error('刪除預訂信息失敗，HTTP 狀態碼:', response.status);
+            const errorMessage = await response.json();
+            console.error('錯誤訊息:', errorMessage);
+        }
+    } catch (error) {
+        console.error('刪除預訂信息時出錯:', error);
+    }
+};
+
+    
+    
+
+    const ClickActions = (memberId) => {
         const popupmodal = document.getElementById('modal');
         const popupLogin = document.getElementById('popup-login');
         const popupSignup = document.getElementById('popup-signup');
@@ -314,41 +370,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 popupSignup.style.display = 'none';
                 popupLogin.style.display = 'block';
                 hideMessages();
-            } else if (target.classList.contains('delete-button')) {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('Token 不存在');
-                    return;
-                }
-
-                if (!globalUserId) {
-                    console.error('Member ID 不存在');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`/api/booking/?member_id=${globalUserId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('Delete response:', data);
-                        fetchBookings(); // 删除成功后刷新预订信息
-                    } else {
-                        console.error('删除预订信息失败，HTTP 状态码:', response.status);
-                        const errorMessage = await response.json();
-                        console.error('错误信息:', errorMessage);
-                    }
-                } catch (error) {
-                    console.error('删除预订信息时出错:', error);
-                }
+            } 
+            else if (target.classList.contains('delete-button')) {
+                await handleDeleteBooking(memberId);
             }
         };
+
+        
+        document.addEventListener('click', handleButtonClick);
+
 
         const hideMessages = () => {
             failLoginMessage.style.display = 'none';
@@ -357,7 +387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             successSignupMessage.style.display = 'none';
         };
 
-        document.addEventListener('click', handleButtonClick);
+        
 
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -381,7 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    ClickActions();
+   
 
     const token = localStorage.getItem('token');
     if (token) {
@@ -389,7 +419,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await fetchCurrentUser();
         isAuthenticated = true;
         fetchBookings(); // 确保 fetchCurrentUser 完成后再调用 fetchBookings
-    }
+    } else {
+        redirectToHomePage(); // 在沒有 token 時導向首頁
+    } 
+    ClickActions();
 });
 
 
