@@ -385,7 +385,7 @@ body {
 .delete-button {
   background-image: url('./images/delete.png');
   position: absolute;
-  top: 0px;
+  /* top: 0px; */
   right: 0px;
   width: 30px;
   height: 30px;
@@ -477,18 +477,13 @@ body {
 .booking-info {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  /* margin: 10px 0; */
   position: relative;
   flex-direction: row;
   align-items: flex-start;
 }
 
-.booking-image img {
-  height: auto;
-  width: 250px;
-  height: 200px;
-  /* margin-right: 20px; */
-}
+
 
 .booking-details {
   display: flex;
@@ -496,21 +491,16 @@ body {
   position: relative;
   gap:10px;
 }
-.date,.time,.price,.address {
+.date,.time,.price,.address,.attraction-name-container{
   display: flex;
   flex-direction: row;
 }
 
-.booking-container {
-  /* position: absolute; */
-  margin-left: 40px; 
-  top: 0; 
-  flex: 1;
-}
 
 
 
-.attraction-name{
+
+.attraction-name,.attraction-name-detail{
   margin-bottom: 20px;
   color: #448899;
   font-weight: 700;
@@ -563,12 +553,14 @@ body {
 .contact-name,.contact-email,.contact-phone{
   font-family: Noto Sans TC;
   margin-bottom: 15px;
+  line-height: 36px;
 }
 
 
 .card-number,.card-time,.card-password{
   font-family: Noto Sans TC;
   margin-bottom: 15px;
+  line-height: 36px;
 }
 
 .name-container,.email-container,.phone-container,.number-container,.time-container,.password-container {
@@ -636,7 +628,47 @@ body {
 }
 
 
-@media (min-width: 1200px) {
+#booking-date::before {
+  content: ' ';
+  margin-left: 5px; 
+}
+#booking-time::before {
+  content: ' ';
+  margin-left: 5px; 
+}
+#booking-price::before {
+  content: ' ';
+  margin-left: 5px; 
+}
+#attraction-address::before {
+  content: ' ';
+  margin-left: 5px; 
+}
+#attraction-name-detail::before {
+  content: ' ';
+  margin-left: 5px; 
+}
+
+
+@media (min-width: 600px) {
+
+  .delete-button {
+    top: 0px;
+  }
+
+  .booking-image img {
+    height: auto;
+    width: 250px;
+    height: 200px;
+    /* margin-right: 20px; */
+  }
+
+  .booking-container {
+    /* position: absolute; */
+    margin-left: 40px; 
+    top: 0; 
+    flex: 1;
+  }
     .booking-button, .login-button,.logout-button {
       display: block; 
     }
@@ -698,7 +730,40 @@ body {
       background-color: #FFFFFF;
     }
   }
-@media (min-width: 361px) and (max-width: 1199px) {
+@media (max-width: 599px){
+
+  .booking-container {
+    /* position: absolute; */
+    /* margin-left: 40px;  */
+    top: 0; 
+    flex: 1;
+    width: 100%;
+  }
+  .booking-info {
+    display: flex;
+    align-items: center;
+    /* margin: 10px 0; */
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .booking-image  {
+    width: 100%; /* 寬度隨視窗大小變化 */
+    height: 200px; /* 固定高度 */
+    object-fit: cover; 
+    margin-bottom: 30px;
+  }
+  .booking-image img {
+    width: 100%; /* 寬度隨視窗大小變化 */
+    height: 200px; /* 固定高度 */
+    object-fit: cover;
+}
+
+.delete-button {
+  bottom: 0px;
+}
+
     .booking-button, .login-button,.logout-button {
       display: block; 
     }
@@ -758,7 +823,7 @@ body {
     }
     .attraction img {
       width: 100%;
-      height: auto;
+      /* height: auto; */
       /* object-fit: cover; */
       box-sizing: border-box;
     }
@@ -776,58 +841,4 @@ body {
       box-sizing: border-box;
     }
   }
-  @media (max-width: 360px) {
-    .booking-button, .login-button,.logout-button {
-      display: block; 
-    }
-    .navigation{
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    .navigation-bar{
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    .listgroups{
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    .allattraction {
-      /* padding: 10px; */
-      grid-template-columns: 1fr; 
-     grid-template-rows: auto;
-      box-sizing: border-box;
-    }
-    .title,
-    .buttons {
-      box-sizing: border-box;
-      width: 100%;
-      text-align: left;
-    }
-    .buttons {
-      box-sizing: border-box;
-      display: flex;
-      width: 100%;
-    }
-    .search input {
-      width: calc(100% - 70px);
-      font-family: "Noto Sans TC";
-      font-weight: bold;
-      box-sizing: border-box;
-    }
-    .attraction {
-      box-sizing: border-box;
-      width: 100%;
-      height: auto;
-    }
-    .attraction img {
-      height:200px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .mrtTitle {
-      box-sizing: border-box;
-      /* position: relative; */
-      background-color: rgb(255, 255, 255, 0.7);
-    }
-  }
+  

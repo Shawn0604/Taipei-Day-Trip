@@ -185,6 +185,7 @@ input[type="radio"]:focus {
   width: 154px;
   height: 36px;
   cursor: pointer;
+  border: 2px solid #448899;
 }
 
 
