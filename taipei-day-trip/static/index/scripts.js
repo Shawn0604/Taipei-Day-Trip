@@ -320,12 +320,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideMessages();
             });
         });
+
+
+        const bookingButton = document.getElementById('booking-button');
+        bookingButton.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = '/booking';  
+        } else {
+            popupmodal.style.display = 'block';  
+            popupLogin.style.display = 'block';
+            hideMessages();
+        }
+    });
     };
     
-    ClickActions();
-    
-    fetchMRTs();
-    fetchAttractions(0);
 
     const mrtContainerElement = document.querySelector('.mrt-container');
     const leftButton = document.querySelector('.arrow-left');
@@ -351,6 +360,13 @@ document.addEventListener('DOMContentLoaded', () => {
             searchAttractions(0, true, keyword);
         }
     });
+
+
+    
+
+    ClickActions();
+    fetchMRTs();
+    fetchAttractions(0);
 });
 
 

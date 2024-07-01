@@ -41,6 +41,20 @@ CREATE TABLE IF NOT EXISTS member (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS booking (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    attractionId BIGINT NOT NULL,
+    date DATE NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    member_id INT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
+)
+""")
+
+
+
 # 插入資料
 for attraction in data['result']['results']:  # 確保從 'result' -> 'results' 中讀取資料
     name = attraction['name']
