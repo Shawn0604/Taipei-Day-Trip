@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     titleElement.addEventListener('click', () => {
-        window.location.href = 'http://34.224.28.249:8000/';
+        window.location.href = 'http://3.94.168.147:8000/';
     });
 
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 
                 const userData = await response.json();
-                console.log('Response data:', userData);
+                // console.log('Response data:', userData);
                 globalUserId = userData.data.id;
                 // const userId = userData.data.id; // 获取data中的id
                 // console.log('User ID:', userId);
@@ -354,7 +354,7 @@ if (bookButton) {
             // }
 
             // 获取全局用户ID
-            console.log('globalUserId', globalUserId);
+            // console.log('globalUserId', globalUserId);
 
             // 建立要發送的資料物件
             const bookingData = {

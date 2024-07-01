@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const userData = await response.json();
-            console.log('Response data:', userData);
+            // console.log('Response data:', userData);
             globalUserId = userData.data.id;
             globalUsername = userData.data.name;
             globalUseremail = userData.data.email;
@@ -147,9 +147,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.querySelector('.nameinput').value = globalUsername;
             document.querySelector('.emailinput').value = globalUseremail;
 
-            console.log(globalUserId);
-            console.log(globalUsername);
-            console.log(globalUseremail);
+            // console.log(globalUserId);
+            // console.log(globalUsername);
+            // console.log(globalUseremail);
 
             return true;
         } catch (error) {
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.error('獲取預訂信息失敗，HTTP 狀態碼:', response.status);
             }
         } catch (error) {
-            console.error('獲取預訂信息時出錯:', error);
+            console.error('獲取預訂訊息時出錯:', error);
         }
     };
     
@@ -301,6 +301,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('登入時出現錯誤:', error);
         }
+    });
+
+
+    titleElement.addEventListener('click', () => {
+        window.location.href = 'http://3.94.168.147:8000/';
     });
 
 
