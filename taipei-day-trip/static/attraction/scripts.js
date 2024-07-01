@@ -380,7 +380,7 @@ if (bookButton) {
             }
 
             const result = await response.json();
-            console.log('Booking created successfully:', result);
+            // console.log('Booking created successfully:', result);
 
             // 清除錯誤訊息
             const errorMessages = document.querySelectorAll('.error-message');

@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Delete response:', data);
+            // console.log('Delete response:', data);
 
             // 更新本地預訂信息而不是再次調用 fetchBookings()
             updateBookingInfo({ attraction: null });
