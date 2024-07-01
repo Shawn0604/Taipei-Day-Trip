@@ -303,6 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    const titleElement = document.querySelector('.title');
 
     titleElement.addEventListener('click', () => {
         window.location.href = 'http://3.94.168.147:8000/';
