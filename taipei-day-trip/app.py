@@ -403,6 +403,69 @@ async def delete_booking(member_info: dict):
             con.close()
     else:
         raise HTTPException(status_code=500, detail="服务器内部错误")
+    
+
+
+class OrderDataPost(BaseModel):
+    prime: str
+    order: dict
+
+
+@app.post("/api/orders")
+async def create_order(order_data: OrderDataPost):
+    
+    prime = order_data.prime
+    order = order_data.order
+    
+    booking = order["trip"]
+    contact = order["contact"]
+    order_number = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    
+    
+    order_info = {
+        "order_number": order_number, 
+        "prime": prime,
+        "price": order["price"],
+        "attraction_id": booking["attraction"]["id"],
+        "attraction_name": booking["attraction"]["name"],
+        "attraction_address": booking["attraction"]["address"],
+        "attraction_image": booking["attraction"]["image"],
+        "date": booking["date"],
+        "time": booking["time"],
+        "contact_name": contact["name"],
+        "contact_email": contact["email"],
+        "contact_phone": contact["phone"],
+        "status": 1  
+    }
+    
+    
+    con, cursor = connectMySQLserver()
+    
+    if cursor is not None:
+        try:
+            cursor.execute("""
+                INSERT INTO orders (order_number, prime, price, attraction_id, attraction_name,
+                                   attraction_address, attraction_image, date, time, contact_name,
+                                   contact_email, contact_phone, status)
+                VALUES (%(order_number)s, %(prime)s, %(price)s, %(attraction_id)s, %(attraction_name)s,
+                        %(attraction_address)s, %(attraction_image)s, %(date)s, %(time)s, %(contact_name)s,
+                        %(contact_email)s, %(contact_phone)s, %(status)s)
+            """, order_info)
+            
+            con.commit()
+            return {"ok": True, "message": "訂單成功建立"}
+        
+        except mysql.connector.Error as err:
+            print("Database Error:", err)
+            return {"error": True, "message": "伺服器內部錯誤，無法建立訂單"}
+        
+        finally:
+            cursor.close()
+            con.close()
+    
+    else:
+        return {"error": True, "message": "伺服器內部錯誤，無法連接資料庫"}
+
 
 
 

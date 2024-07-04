@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let globalUsername = null;
     let globalUseremail = null;
     let isAuthenticated = false; // 是否已經驗證過用戶
+    let bookingInfo = null;
 
     // 隐藏所有提示信息
     failLoginMessage.style.display = 'none';
@@ -177,6 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
             if (response.ok) {
                 const data = await response.json();
+                bookingInfo = data.data;
                 const booking = data.data; // Use data.data to access the booking object directly
                 if (booking) { // 確保有有效的 booking
                     updateBookingInfo(booking); // Pass the booking object to updateBookingInfo
@@ -429,6 +431,184 @@ document.addEventListener('DOMContentLoaded', async () => {
         redirectToHomePage(); // 在沒有 token 時導向首頁
     } 
     ClickActions();
+
+    /////order
+    //////
+    
+
+
+    var fields = {
+        number: {
+            // css selector
+            element: '#card-number',
+            placeholder: '**** **** **** ****'
+        },
+        expirationDate: {
+            // DOM object
+            element: document.getElementById('card-expiration-date'),
+            placeholder: 'MM / YY'
+        },
+        ccv: {
+            element: '#card-ccv',
+            placeholder: 'ccv'
+        }
+    }
+
+    TPDirect.card.setup({
+        fields: fields,
+        styles: {
+            // Style all elements
+            'input': {
+                'color': 'gray'
+            },
+            // Styling ccv field
+            'input.ccv': {
+                // 'font-size': '16px'
+            },
+            // Styling expiration-date field
+            'input.expiration-date': {
+                // 'font-size': '16px'
+            },
+            // Styling card-number field
+            'input.card-number': {
+                // 'font-size': '16px'
+            },
+            // style focus state
+            ':focus': {
+                // 'color': 'black'
+            },
+            // style valid state
+            '.valid': {
+                'color': 'green'
+            },
+            // style invalid state
+            '.invalid': {
+                'color': 'red'
+            },
+            // Media queries
+            // Note that these apply to the iframe, not the root window.
+            '@media screen and (max-width: 400px)': {
+                'input': {
+                    'color': 'orange'
+                }
+            }
+        },
+        // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+        isMaskCreditCardNumber: true,
+        maskCreditCardNumberRange: {
+            beginIndex: 6, 
+            endIndex: 11
+        }
+    })
+
+    TPDirect.card.onUpdate(function (update) {
+        if (update.canGetPrime) {
+            // 可以取得 prime
+            document.querySelector('.submit-button').removeAttribute('disabled');
+        } else {
+            // 不能取得 prime
+            document.querySelector('.submit-button').setAttribute('disabled', true);
+        }
+
+        // 根據不同的欄位更新狀態
+        if (update.status.number === 2) {
+            // setNumberFormGroupToError()
+        } else if (update.status.number === 0) {
+            // setNumberFormGroupToSuccess()
+        }
+
+        if (update.status.expiry === 2) {
+            // setExpiryFormGroupToError()
+        } else if (update.status.expiry === 0) {
+            // setExpiryFormGroupToSuccess()
+        }
+
+        if (update.status.ccv === 2) {
+            // setCcvFormGroupToError()
+        } else if (update.status.ccv === 0) {
+            // setCcvFormGroupToSuccess()
+        }
+    });
+
+
+    document.querySelector('.submit-button').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+    
+        const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+        if (tappayStatus.canGetPrime === false) {
+            alert('請正確填寫付款資訊');
+            return;
+        }
+
+        
+        TPDirect.card.getPrime(async (result) => {
+            if (result.status !== 0) {
+                alert('取得 prime 失敗 ' + result.msg);
+                return;
+            }
+
+            
+            console.log('Prime:', result.card.prime);
+
+            
+            const contactName = document.querySelector('.nameinput').value;
+            const contactEmail = document.querySelector('.emailinput').value;
+            const contactPhone = document.querySelector('.phoneinput').value;
+
+            
+            const orderData = {
+                prime: result.card.prime,
+                order: {
+                    price: bookingInfo.price,
+                    trip: {
+                        attraction: {
+                            id: bookingInfo.attraction.id,
+                            name: bookingInfo.attraction.name,
+                            address: bookingInfo.attraction.address,
+                            image: bookingInfo.attraction.image
+                        },
+                        date: bookingInfo.date,
+                        time: bookingInfo.time
+                    },
+                    contact: {
+                        name: contactName,
+                        email: contactEmail,
+                        phone: contactPhone
+                    }
+                }
+            };
+
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('訂單提交成功');
+                    console.log('訂單回應:', data);
+                } else {
+                    console.error('提交訂單失敗，HTTP 狀態碼:', response.status);
+                    const errorMessage = await response.json();
+                    console.error('錯誤訊息:', errorMessage);
+                    alert('訂單提交失敗');
+                }
+            } catch (error) {
+                console.error('提交訂單時出錯:', error);
+                alert('提交訂單時出錯');
+            }
+        });
+    });
+
+    
+    
+    
+
 });
 
 

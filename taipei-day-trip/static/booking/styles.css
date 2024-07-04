@@ -648,6 +648,13 @@ body {
   content: ' ';
   margin-left: 5px; 
 }
+.tpfield-card-number,.tpfield-card-expiration-date,.tpfield-card-ccv {
+  height: 40px;
+  width: 300px;
+  border: 1px solid gray;
+  margin: 5px 0;
+  padding: 5px;
+}
 
 
 @media (min-width: 600px) {
