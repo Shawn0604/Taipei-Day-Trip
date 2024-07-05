@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     titleElement.addEventListener('click', () => {
-        window.location.href = 'http://3.94.168.147:8000/';
+        window.location.href = 'http://52.54.170.66:8000/';
     });
 
     document.querySelectorAll('input[type="radio"]').forEach(radio => {

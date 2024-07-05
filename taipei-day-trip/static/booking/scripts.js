@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const titleElement = document.querySelector('.title');
 
     titleElement.addEventListener('click', () => {
-        window.location.href = 'http://3.94.168.147:8000/';
+        window.location.href = 'http://52.54.170.66:8000/';
     });
 
 
@@ -533,30 +533,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelector('.submit-button').addEventListener('click', async function(event) {
         event.preventDefault();
-
     
         const tappayStatus = TPDirect.card.getTappayFieldsStatus();
-        if (tappayStatus.canGetPrime === false) {
+        if (!tappayStatus.canGetPrime) {
             alert('請正確填寫付款資訊');
             return;
         }
-
-        
+    
         TPDirect.card.getPrime(async (result) => {
             if (result.status !== 0) {
                 alert('取得 prime 失敗 ' + result.msg);
                 return;
             }
-
-            
-            console.log('Prime:', result.card.prime);
-
-            
+    
             const contactName = document.querySelector('.nameinput').value;
             const contactEmail = document.querySelector('.emailinput').value;
             const contactPhone = document.querySelector('.phoneinput').value;
-
-            
+    
             const orderData = {
                 prime: result.card.prime,
                 order: {
@@ -578,7 +571,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             };
-
+    
             try {
                 const response = await fetch('/api/orders', {
                     method: 'POST',
@@ -587,11 +580,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     },
                     body: JSON.stringify(orderData)
                 });
-
+    
                 if (response.ok) {
                     const data = await response.json();
-                    alert('訂單提交成功');
-                    console.log('訂單回應:', data);
+                    // alert('訂單提交成功');
+                    const orderNumber = data.data.number;
+                    window.location.href = `http://52.54.170.66:8000/thankyou?number=${orderNumber}`;
                 } else {
                     console.error('提交訂單失敗，HTTP 狀態碼:', response.status);
                     const errorMessage = await response.json();
@@ -604,10 +598,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
-
-    
-    
-    
 
 });
 
