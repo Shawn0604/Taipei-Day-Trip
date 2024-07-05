@@ -586,6 +586,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // alert('訂單提交成功');
                     const orderNumber = data.data.number;
                     window.location.href = `http://52.54.170.66:8000/thankyou?number=${orderNumber}`;
+                    await handleDeleteBooking();
                 } else {
                     console.error('提交訂單失敗，HTTP 狀態碼:', response.status);
                     const errorMessage = await response.json();
