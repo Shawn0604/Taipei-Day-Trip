@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
 
-
 body {
   margin: 0;
   padding: 0;
@@ -63,59 +62,68 @@ body {
 .navigation-bar {
   width: 100%;
   /* max-width: 1920px; */
-  /* height: 320px; */
+  height: 320px;
   /* background-image: url('./images/welcome.png'); */
-  /* background-size: cover; */
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* padding: 10px; */
+  padding: 10px;
   gap: 10px;
   box-sizing: border-box;
-  flex-direction: column;
-  text-align: left;
 }
 .navigation-content {
   width: 100%;
   max-width: 1200px;
-  /* height: 1000px; */
-  /* margin-top: 30px; */
+  height: 169px;
   box-sizing: border-box;
+  margin: 0 auto; 
 }
-.navigation-content h1 {
+
+.navigtion-content h1 {
   font-size: 28px;
   color: white;
   font-family: "Noto Sans TC";
   box-sizing: border-box;
 }
 .bigtext {
+  /* height: 41px; */
   font-family: "Noto Sans TC";
-  margin-bottom:15px; 
+  margin-bottom: 10px; 
   font-weight: 700;
-  font-size: 19px;
+  font-size: 20px;
   line-height: 24px;
   color: #666666;
-  /* box-sizing: border-box; */
-  margin-top: 40px;
-  margin-bottom: 20px;
-  text-align: left;
   box-sizing: border-box;
-  width: 100%;
-  flex-direction: column;
-  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .smalltext {
   color: #666666;
   max-width: 1200px;
   font-family: "Noto Sans TC";
-  /* font-weight: bold; */
-  /* margin-bottom: 40px;  */
+  font-weight: bold;
+  margin-top: 30px; 
+  margin-bottom: 30px; 
   line-height: 24px;
-  font-size: 16px;
   height: 20px;
   box-sizing: border-box; 
-  text-align: left;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ordertext {
+  color: #666666;
+  max-width: 1200px;
+  font-family: "Noto Sans TC";
+  font-weight: bold;
+  line-height: 24px;
+  height: 20px;
+  box-sizing: border-box; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .search {
   display: flex;
@@ -317,20 +325,19 @@ body {
 }
 .copyrighttext {
   width: 100%;
-  height: 104px;
-  padding-top: 40px;
+  min-height: 210px; /* 設置最小高度，讓元素可以增長 */
   display: flex;
   justify-content: center;
   font-family: "Noto Sans TC";
   font-weight: 700;
-  align-items: flex-start;
+  align-items: flex-start; /* 將文字置頂 */
   color: #FFFFFF;
   background-color: #666666;
+  margin-top: 10px;
   box-sizing: border-box;
-  position: relative;
-  margin-top: auto;
-  margin-top: 40px;
+  padding: 30px; /* 可選，增加內邊距以增加元素的高度 */
 }
+
 .booking-button:first-child,
 .login-button:first-child ,.logout-button:first-child{
   border-right: none;
@@ -380,18 +387,6 @@ body {
   background-color:#448899;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-}
-
-.delete-button {
-  background-image: url('./images/delete.png');
-  position: absolute;
-  /* top: 0px; */
-  right: 0px;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  background-size: cover;
-  background-color: rgba(255, 255, 255, 1);
 }
 
 .popup-close {
@@ -474,209 +469,7 @@ body {
   text-decoration: none;
 }
 
-.booking-info {
-  display: flex;
-  align-items: center;
-  /* margin: 10px 0; */
-  position: relative;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-
-
-.booking-details {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  gap:10px;
-}
-.date,.time,.price,.address,.attraction-name-container{
-  display: flex;
-  flex-direction: row;
-}
-
-
-
-
-
-.attraction-name,.attraction-name-detail{
-  margin-bottom: 20px;
-  color: #448899;
-  font-weight: 700;
-}
-.attraction-name,.booking-date,.booking-time,.booking-price,.attraction-address{
-  font-family: "Noto Sans TC";
-  font-size: 16px;
-}
-.attraction-name-title,.booking-date-title,.booking-time-title,.booking-price-title,.attraction-address-title{
-  font-family: "Noto Sans TC";
-  font-size: 16px;
-  font-weight: 700;
-  color: #666666;
-}
-
-.separator-line {
-  width: 1200px;
-  border-top: 2px solid rgba(232, 232, 232, 1);
-  margin: 0 auto; /* 將分隔線居中 */
-}
-.separator-line-2 {
-  margin-top:40px;
-  width: 1200px;
-  border-top: 2px solid rgba(232, 232, 232, 1);
-  /* margin: 0 auto; 將分隔線居中 */
-}
-
-.contact-title,.card-title{
-  font-family: Noto Sans TC;
-  font-size: 19px;
-  font-weight: 700;
-  text-align: left;
-  color: #666666;
-  margin-top: 40px;
-  margin-bottom: 20px;
-}
-
-
-.contact-text{
-  font-family: Noto Sans TC;
-  font-size: 16px;
-  font-weight: 700;
-  text-align: left;
-  color: #666666;
-  margin-top: 15px;
-  margin-bottom: 40px;
-}
-
-
-.contact-name,.contact-email,.contact-phone{
-  font-family: Noto Sans TC;
-  margin-bottom: 15px;
-  line-height: 36px;
-}
-
-
-.card-number,.card-time,.card-password{
-  font-family: Noto Sans TC;
-  margin-bottom: 15px;
-  line-height: 36px;
-}
-
-.name-container,.email-container,.phone-container,.number-container,.time-container,.password-container {
-  display: flex;
-  flex-direction: row;
-}
-
-.submit-container{
-  flex: none;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  box-sizing: border-box;
-  height: 20px;
-  margin-bottom: 20px;
-}
-.submit-button-container{
-  flex: none;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  box-sizing: border-box;
-  height: 20px;
-  margin-bottom: 20px;
-}
-.total-price-container{
-  flex: none;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  box-sizing: border-box;
-  height: 20px;
-  margin-bottom: 20px;
-  margin-top: 40px;
-}
-.submit-button{
-  margin-top: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  background-color: #448899;
-  border-radius: 5px;
-  font-size: 18px;
-  width: 154px;
-  height: 36px;
-  cursor: pointer;
-}
-
-.total-price{
-  font-family: "Noto Sans TC", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #666666;
-}
-
-.nameinput,.emailinput,.phoneinput,.numberinput,.timeinput,.passwordinput{
-  display: block;
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 200px;
-}
-
-
-#booking-date::before {
-  content: ' ';
-  margin-left: 5px; 
-}
-#booking-time::before {
-  content: ' ';
-  margin-left: 5px; 
-}
-#booking-price::before {
-  content: ' ';
-  margin-left: 5px; 
-}
-#attraction-address::before {
-  content: ' ';
-  margin-left: 5px; 
-}
-#attraction-name-detail::before {
-  content: ' ';
-  margin-left: 5px; 
-}
-.tpfield-card-number,.tpfield-card-expiration-date,.tpfield-card-ccv {
-  height: 30px;
-  width: 190px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  padding: 3px;
-  border-radius: 5px;
-}
-
-
-@media (min-width: 600px) {
-
-  .delete-button {
-    top: 0px;
-  }
-
-  .booking-image img {
-    height: auto;
-    width: 250px;
-    height: 200px;
-    /* margin-right: 20px; */
-  }
-
-  .booking-container {
-    /* position: absolute; */
-    margin-left: 40px; 
-    top: 0; 
-    flex: 1;
-  }
+@media (min-width: 1200px) {
     .booking-button, .login-button,.logout-button {
       display: block; 
     }
@@ -687,9 +480,8 @@ body {
     }
     .navigation-bar{
       width: 100%;
-      padding: 10px;
+      padding: 15px 0 0 0;
       box-sizing: border-box;
-
     }
     .navigation{
       padding: 10px;
@@ -738,40 +530,7 @@ body {
       background-color: #FFFFFF;
     }
   }
-@media (max-width: 599px){
-
-  .booking-container {
-    /* position: absolute; */
-    /* margin-left: 40px;  */
-    top: 0; 
-    flex: 1;
-    width: 100%;
-  }
-  .booking-info {
-    display: flex;
-    align-items: center;
-    /* margin: 10px 0; */
-    position: relative;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .booking-image  {
-    width: 100%; /* 寬度隨視窗大小變化 */
-    height: 200px; /* 固定高度 */
-    object-fit: cover; 
-    margin-bottom: 30px;
-  }
-  .booking-image img {
-    width: 100%; /* 寬度隨視窗大小變化 */
-    height: 200px; /* 固定高度 */
-    object-fit: cover;
-}
-
-.delete-button {
-  bottom: 0px;
-}
-
+@media (min-width: 361px) and (max-width: 1199px) {
     .booking-button, .login-button,.logout-button {
       display: block; 
     }
@@ -831,7 +590,7 @@ body {
     }
     .attraction img {
       width: 100%;
-      /* height: auto; */
+      height: auto;
       /* object-fit: cover; */
       box-sizing: border-box;
     }
@@ -849,4 +608,58 @@ body {
       box-sizing: border-box;
     }
   }
-  
+  @media (max-width: 360px) {
+    .booking-button, .login-button,.logout-button {
+      display: block; 
+    }
+    .navigation{
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .navigation-bar{
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .listgroups{
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .allattraction {
+      /* padding: 10px; */
+      grid-template-columns: 1fr; 
+     grid-template-rows: auto;
+      box-sizing: border-box;
+    }
+    .title,
+    .buttons {
+      box-sizing: border-box;
+      width: 100%;
+      text-align: left;
+    }
+    .buttons {
+      box-sizing: border-box;
+      display: flex;
+      width: 100%;
+    }
+    .search input {
+      width: calc(100% - 70px);
+      font-family: "Noto Sans TC";
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+    .attraction {
+      box-sizing: border-box;
+      width: 100%;
+      height: auto;
+    }
+    .attraction img {
+      height:200px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .mrtTitle {
+      box-sizing: border-box;
+      /* position: relative; */
+      background-color: rgb(255, 255, 255, 0.7);
+    }
+  }

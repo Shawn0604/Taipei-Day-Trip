@@ -55,6 +55,29 @@ CREATE TABLE IF NOT EXISTS booking (
 
 
 
+cursor.execute("""CREATE TABLE IF NOT EXISTS `orders` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_number VARCHAR(255) NOT NULL,
+    prime VARCHAR(255) NOT NULL,
+    price VARCHAR(255) NOT NULL,
+    attraction_id BIGINT NOT NULL,
+    attraction_name VARCHAR(255) NOT NULL,
+    attraction_address VARCHAR(255) NOT NULL,
+    attraction_image VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    contact_name VARCHAR(255) NOT NULL,
+    contact_email VARCHAR(255) NOT NULL,
+    contact_phone VARCHAR(255) NOT NULL,
+    status INT NOT NULL
+);""")
+
+
+
+
+
+
+
 # 插入資料
 for attraction in data['result']['results']:  # 確保從 'result' -> 'results' 中讀取資料
     name = attraction['name']
