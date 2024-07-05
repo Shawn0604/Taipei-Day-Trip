@@ -248,7 +248,23 @@ document.addEventListener('DOMContentLoaded', () => {
     titleElement.addEventListener('click', () => {
         window.location.href = 'http://52.54.170.66:8000/';
     });
+
+
+    const showLogoutButton = () => {
+        document.querySelector('.login-button').style.display = 'none';
+        document.querySelector('.logout-button').style.display = 'block';
+    };
+
+    document.querySelector('.logout-button').addEventListener('click', function() {
+        localStorage.removeItem('token');  
+        redirectToHomePage();  
+    });
+    
+    const redirectToHomePage = () => {
+        window.location.href = '/'; 
+    };
 });
+
 
 
 
