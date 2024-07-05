@@ -649,11 +649,12 @@ body {
   margin-left: 5px; 
 }
 .tpfield-card-number,.tpfield-card-expiration-date,.tpfield-card-ccv {
-  height: 40px;
-  width: 300px;
-  border: 1px solid gray;
-  margin: 5px 0;
-  padding: 5px;
+  height: 30px;
+  width: 190px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 3px;
+  border-radius: 5px;
 }
 
 
