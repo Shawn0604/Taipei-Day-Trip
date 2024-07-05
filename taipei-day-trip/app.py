@@ -410,18 +410,16 @@ class OrderDataPost(BaseModel):
     prime: str
     order: dict
 
-
+import requests
 @app.post("/api/orders")
 async def create_order(order_data: OrderDataPost):
-    
     prime = order_data.prime
     order = order_data.order
-    
+
     booking = order["trip"]
     contact = order["contact"]
     order_number = datetime.now().strftime("%Y%m%d%H%M%S%f")
-    
-    
+
     order_info = {
         "order_number": order_number, 
         "prime": prime,
@@ -435,10 +433,9 @@ async def create_order(order_data: OrderDataPost):
         "contact_name": contact["name"],
         "contact_email": contact["email"],
         "contact_phone": contact["phone"],
-        "status": 1  
+        "status": 0
     }
-    
-    
+
     con, cursor = connectMySQLserver()
     
     if cursor is not None:
@@ -453,7 +450,56 @@ async def create_order(order_data: OrderDataPost):
             """, order_info)
             
             con.commit()
-            return {"ok": True, "message": "訂單成功建立"}
+            prime_url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+            headers = {
+                "Content-Type": "application/json",
+                "x-api-key": "partner_NnCuRZO2ua96xmFcVb69wz26IWmLirqVDjB0uy7C4wXbqANadsLdEVBG"
+            }
+            pay = {
+                "prime": prime,
+                "partner_key": "partner_NnCuRZO2ua96xmFcVb69wz26IWmLirqVDjB0uy7C4wXbqANadsLdEVBG",
+                "merchant_id": "shawn910604_CTBC",
+                "details": "TapPay Test",
+                "amount": order["price"],
+                "cardholder": {
+                    "phone_number": contact["phone"],
+                    "name": contact["name"],
+                    "email": contact["email"],
+                    "zip_code": "",
+                    "address": booking["attraction"]["address"],
+                    "national_id": ""
+                },
+                "remember": True
+            }
+
+            payment_response = requests.post(prime_url, json=pay, headers=headers)
+            payment_result = payment_response.json()
+            print(payment_result)
+            
+            if payment_response.status_code == 200 and payment_result["status"] == 0:
+                payment_status = 1
+                payment_message = "PAID"
+            else:
+                payment_status = 0
+                payment_message = "UNPAID"
+            
+            cursor.execute("""
+                UPDATE orders
+                SET status = %s
+                WHERE order_number = %s
+            """, (payment_status, order_number))
+            
+            con.commit()
+
+            return {
+                "data": {
+                    "number": order_number,
+                    "payment": {
+                        "status": payment_status,
+                        "message": payment_message
+                    }
+                }
+            }
         
         except mysql.connector.Error as err:
             print("Database Error:", err)
@@ -465,6 +511,9 @@ async def create_order(order_data: OrderDataPost):
     
     else:
         return {"error": True, "message": "伺服器內部錯誤，無法連接資料庫"}
+    
+
+
 
 
 
