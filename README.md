@@ -1,22 +1,21 @@
 # Taipei Day Trip
 
 ## Introduction
-
+_Taipei Day Trip is a website that provides detailed information on Taipei attractions, allowing users to explore and book itineraries with third-party payment._
 ## Outline
 
 - [Main Features](#main-features)
-- [User Interface](#user-Interface)
-- [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
+- [Server Architecture](#server-architecture)
 - [Table Schema](#table-schema)
 - [API Document](#api-document)
 - [Contact](#contact)
 
 ## Main Features
-
-## User Interface
-
-## System Architecture
+- Keyword Searching
+- Attraction Browsing
+- Travel Booking
+- Credit Card Payment
 
 ## Tech Stack
 
@@ -26,12 +25,21 @@
 | **Backend**    | ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) |
 | **Database**   | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white) 
 | **DevOps**     | ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat&logo=amazonaws&logoColor=white) ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat&logo=amazon-ec2&logoColor=white) 
-| **Environment**| ![Linux](https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)       
+| **Environment**| ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)       
 | **Others**     | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white) |
-                                                                                        
-## Table Schema
 
-## API Documentation
+
+## Server Architecture
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/server_architecture.JPG" alt="Server Architecture" width="800"/>
+
+## Table Schema
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/table_schema.JPG" alt="Table Schema" width="800"/>
+
+## API Document
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/api_document.JPG" alt="API Document" width="800"/>
+
+[Details](https://app.swaggerhub.com/apis-docs/padax/taipei-a-day/1.1.0#/ "link")
 
 ## Contact
-
+Name : Shawn Tsai  
+Email : shawn901011@gmail.com
