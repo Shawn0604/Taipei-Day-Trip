@@ -42,5 +42,5 @@ _Taipei Day Trip is a website that provides detailed information on Taipei attra
 [Details](https://app.swaggerhub.com/apis-docs/padax/taipei-a-day/1.1.0#/ "link")
 
 ## Contact
-Name : Shawn Tsai
+Name : Shawn Tsai  
 Email : shawn901011@gmail.com
