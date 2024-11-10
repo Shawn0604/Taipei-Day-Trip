@@ -2,6 +2,7 @@
 
 ## Introduction
 _Taipei Day Trip is a website that provides detailed information on Taipei attractions, allowing users to explore and book itineraries with third-party payment._
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/taipei_day_trip/home.JPG" alt="Home" width="800"/>
 ## Outline
 
 - [Main Features](#main-features)
@@ -13,9 +14,17 @@ _Taipei Day Trip is a website that provides detailed information on Taipei attra
 
 ## Main Features
 - Keyword Searching
+Allows users to search for attractions they want to learn about
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/taipei_day_trip/home_search.JPG" alt="Home_Research" width="800"/>
+
 - Attraction Browsing
-- Travel Booking
-- Credit Card Payment
+Provides users with detailed descriptions of attractions in Taipei
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/taipei_day_trip/attraction.JPG" alt="Attraction" width="800"/>
+
+- Travel Booking & Credit Card Payment
+Enables users to book travel plans and securely process payments via credit card
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/taipei_day_trip/booking.JPG" alt="Booking" width="800"/>
+
 
 ## Tech Stack
 
