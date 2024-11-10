@@ -4,8 +4,7 @@
 _Taipei Day Trip is a website that provides detailed information on Taipei attractions, allowing users to explore and book itineraries with third-party payment._
 ## Outline
 
-- [Main Features](#main-feature)
-- [User Interface](#user-Interface)
+- [Main Features](#main-features)
 - [Tech Stack](#tech-stack)
 - [Server Architecture](#server-architecture)
 - [Table Schema](#table-schema)
@@ -36,7 +35,7 @@ _Taipei Day Trip is a website that provides detailed information on Taipei attra
 ## Table Schema
 <img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/table_schema.JPG" alt="Table Schema" width="800"/>
 
-## API Documentation
+## API Document
 <img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/api_document.JPG" alt="API Document" width="800"/>
 
 [Details](https://app.swaggerhub.com/apis-docs/padax/taipei-a-day/1.1.0#/ "link")
