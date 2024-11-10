@@ -34,7 +34,7 @@ Taipei Day Trip is a website that provides detailed information on Taipei attrac
 ## Table Schema
 
 ## API Documentation
-<img src="https://github.com/Shawn0604/Taipei-Day-Trip/tree/develop/readme_image/api-document.JPG" alt="API" width="800"/>
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/blob/develop/readme_image/api_document.JPG" alt="API" width="800"/>
 ## Contact
 Name : Shawn Tsai
 Email : shawn901011@gmail.com
