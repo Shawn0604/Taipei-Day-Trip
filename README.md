@@ -1,10 +1,10 @@
 # Taipei Day Trip
 
 ## Introduction
-
+Taipei Day Trip is a website that provides detailed information on Taipei attractions, allowing users to explore and book itineraries with ease, complete with secure credit card payment options.
 ## Outline
 
-- [Main Features](#main-features)
+- [Main Features](#main-feature)
 - [User Interface](#user-Interface)
 - [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
@@ -13,8 +13,10 @@
 - [Contact](#contact)
 
 ## Main Features
-
-## User Interface
+- Keyword Searching
+- Attraction Browsing
+- Travel Booking
+- Credit Card Payment
 
 ## System Architecture
 
@@ -26,12 +28,13 @@
 | **Backend**    | ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) |
 | **Database**   | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white) 
 | **DevOps**     | ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat&logo=amazonaws&logoColor=white) ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF9900?style=flat&logo=amazon-ec2&logoColor=white) 
-| **Environment**| ![Linux](https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)       
+| **Environment**| ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)       
 | **Others**     | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white) |
                                                                                         
 ## Table Schema
 
 ## API Documentation
-
+<img src="https://github.com/Shawn0604/Taipei-Day-Trip/readme_image/api-document.JPG" alt="API" width="800"/>
 ## Contact
-
+Name : Shawn Tsai
+Email : shawn901011@gmail.com
