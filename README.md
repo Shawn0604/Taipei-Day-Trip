@@ -49,6 +49,21 @@ Enables users to book travel plans and securely process payments via credit card
 
 [Details](https://app.swaggerhub.com/apis-docs/padax/taipei-a-day/1.1.0#/ "link")
 
+## How to Run the Project on a Local Server
+1.**Install Required Packages**
+- pip install fastapi uvicorn
+- pip install mysql-connector-python
+- pip install PyJWT
+- pip install requests
+
+2.**Import Data into MySQL**
+- create a database named `website` and within it
+- create the following four tables: `attractions`, `booking`, `member`, and `orders`
+
+3.**Run the Server and Verify MySQL Connection**
+- uvicorn app:app --reload
+- make sure the MySQL password you use in your application matches the password set on your local MySQL server.
+
 ## Contact
 Name : Shawn Tsai  
 Email : shawn901011@gmail.com
